@@ -1,6 +1,6 @@
 <mat-tab-group mat-align-tabs="getSession">
   <mat-tab label="Create Session">
-    <div>Session : {{sessionId | async}}</div>
+    <div>Session : {{(sessionResource | async)?.sessionId}}</div>
     <button mat-button (click)="getSession()">Create Session</button>
   </mat-tab>
   <mat-tab label="Delete Session">

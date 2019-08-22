@@ -12,12 +12,12 @@ import {AuthenticationService} from '../services/authenticate';
 export class ManipulateDriverComponent {
   title = 'Driver Manipulation';
 
-  sessionId: Observable<SessionIdResource>;
+  sessionResource: Observable<SessionIdResource>;
 
   constructor(private manipulateservice: ManipulateServiceService, private authenticateService: AuthenticationService) {
   }
 
   getSession() {
-    return this.sessionId = this.manipulateservice.getSession();
+    this.sessionResource = this.manipulateservice.getSession();
   }
 }

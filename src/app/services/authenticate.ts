@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 
 import {User} from '../models/user';
 import {environment} from '../../environments/environment';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -34,6 +34,11 @@ export class AuthenticationService {
   }
 
   async oauth(clientId: string, clientSecret: string) {
+    // const authorizeUrl = `${environment.apiUrl}/oauth/authorize?client_id=${clientId}&response_type=code`;
+    // return await this.http.get<any>(authorizeUrl, {}).pipe(map(respons => {
+    //
+    // }));
+
     const authUrl = `${environment.apiUrl}/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`;
     return await this.http.post<any>(authUrl, {});
   }

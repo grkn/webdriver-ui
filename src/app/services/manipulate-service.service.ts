@@ -13,9 +13,6 @@ export class ManipulateServiceService {
   }
 
   getSession() {
-    return this.httpClient.get<SessionIdResource>(`${environment.apiUrl}/tanistan/driver/session`).pipe(map(item => {
-      console.log(item);
-      return item;
-    }));
+    return this.httpClient.post<SessionIdResource>(`${environment.apiUrl}/tanistan/driver/session`, {desiredCapabilities: {}}).pipe(map(item => item));
   }
 }

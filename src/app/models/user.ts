@@ -5,4 +5,5 @@ export class User {
   accountPhrase: string;
   firstName: string;
   lastName: string;
+  accessToken: string;
 }

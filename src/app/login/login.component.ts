@@ -11,7 +11,6 @@ export class LoginComponent implements OnInit {
 
   username: string;
   password: string;
-  user: User;
 
   constructor(public authenticateService: AuthenticationService) {
   }
@@ -20,11 +19,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.authenticateService.login(this.username, this.password).subscribe(user => {
-      if (user) {
-        this.user = this.authenticateService.currentUserValue;
-      }
-    });
-
+    this.authenticateService.login(this.username, this.password).subscribe();
   }
 }

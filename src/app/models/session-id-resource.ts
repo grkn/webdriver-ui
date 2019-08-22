@@ -1,4 +1,3 @@
-export class SessionIdResource {
-  constructor(private sessionId) {
-  }
+export interface SessionIdResource {
+  sessionId: string;
 }
