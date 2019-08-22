@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -16,12 +16,14 @@
     "@angular/common": "~8.2.0",
     "@angular/compiler": "~8.2.0",
     "@angular/core": "~8.2.0",
+    "@angular/flex-layout": "^8.0.0-beta.26",
     "@angular/forms": "~8.2.0",
     "@angular/material": "^8.1.3",
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
     "hammerjs": "^2.0.8",
+    "parse-json": "^5.0.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
@@ -46,5 +48,14 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3"
+  },
+  "architect": {
+    "serve": {
+      "builder": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "webdriver-ui:build",
+        "proxyConfig": "proxy.conf.js"
+      }
+    }
   }
 }

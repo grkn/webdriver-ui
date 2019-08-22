@@ -1,1 +1,33 @@
-<router-outlet></router-outlet>
+<mat-card class="basic-container" id="main-container">
+  <mat-card-header  class="mat-card-header basic-container" mat-card-title="HEADER">
+    <mat-card-title>HEADER</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content mat-card-title="Title">
+    <mat-toolbar color="warn">
+      <mat-toolbar-row>
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="nav.toggle()" color="primary">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>&nbsp;
+        <span>Menu</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="basic-container">
+      <mat-sidenav #nav class="nav-container">
+        <mat-nav-list>
+          <app-side-nav-bar [elementRef]="nav"></app-side-nav-bar>
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content mode="side" opened role="navigation">
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+  </mat-card-content>
+</mat-card>
+
+
+
+
+
