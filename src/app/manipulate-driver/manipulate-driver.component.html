@@ -5,7 +5,7 @@
         <mat-card-title>{{sessionId ? 'Session : '+ sessionId : 'Please Create Session To Continue'}}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <button mat-raised-button (click)="getSession()">Create Session</button>
+        <button color="primary" mat-raised-button (click)="getSession()">Create Session</button>
       </mat-card-content>
     </mat-card>
   </mat-tab>
@@ -80,13 +80,18 @@
               <td mat-cell *matCellDef="let element"> {{element.selectedElementId}}</td>
             </ng-container>
 
+            <ng-container matColumnDef="result">
+              <th mat-header-cell *matHeaderCellDef> Result</th>
+              <td mat-cell *matCellDef="let element"> {{!element.result ? '' : element.result.value}}</td>
+            </ng-container>
+
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef> Actions</th>
               <td mat-cell *matCellDef="let element">
-                <button mat-stroked-button (click)="findElementBy(element)">Find Element</button>
-                <button mat-flat-button [disabled]="!element.selectedElementId" (click)="openDialog(element)">Send Keys</button>
-                <button mat-flat-button [disabled]="!element.selectedElementId" (click)="clickElement(element)">Click Element</button>
-                <button mat-flat-button (click)="removeRow(element)">Remove</button>
+                <button mat-stroked-button color="primary" (click)="findElementBy(element)">Find Element</button>
+                <button mat-flat-button  color="primary" [disabled]="!element.selectedElementId" (click)="openDialog(element)">Send Keys</button>
+                <button mat-flat-button color="primary" [disabled]="!element.selectedElementId" (click)="clickElement(element)">Click Element</button>
+                <button mat-flat-button color="primary" (click)="removeRow(element)">Remove</button>
               </td>
             </ng-container>
 
@@ -95,7 +100,7 @@
                 (click)="selection.toggle(row)">
           </table>
         </div>
-
+        <button mat-button color="primary" (click)="runTest()">Run Tests</button>
       </mat-card-content>
 
     </mat-card>

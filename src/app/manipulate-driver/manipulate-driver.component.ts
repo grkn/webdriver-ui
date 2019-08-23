@@ -3,6 +3,7 @@ import {ManipulateServiceService} from '../services/manipulate-service.service';
 import {MatDialog, MatDialogRef, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ReceiveMessageComponent} from '../dialogs/receive-message/receive-message.component';
+import {DefaultResource} from '../models/default-resource';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   elementActions: ElementAction[] = [];
   elementDatasource: MatTableDataSource<ElementAction>;
   selection = new SelectionModel<ElementAction>(false, []);
-  displayedColumns = ['select', 'position', 'selectionType', 'selectionValue', 'selectedElement', 'actions'];
+  displayedColumns = ['select', 'position', 'selectionType', 'selectionValue', 'selectedElement', 'result', 'actions'];
   navigateUrl: string;
   selectionValue: string;
   selectionType: string;
@@ -47,7 +48,10 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
       position: this.elementActions.length,
       selectionType: this.selectionType,
       selectionValue: this.selectionValue,
-      selectedElementId: ''
+      selectedElementId: '',
+      message: '',
+      result: null,
+      clickable: false
     });
     this.elementDatasource = new MatTableDataSource(this.elementActions);
   }
@@ -66,14 +70,15 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   }
 
   sendKeysElement(element: ElementAction, message: string) {
-    this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, message)
-      .subscribe(item => {
-        this.selectedElement = null, this.message = null;
-      });
+    // this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, message)
+    //   .subscribe(item => {
+    //     this.selectedElement = null, this.message = null;
+    //   });
   }
 
   clickElement(element: ElementAction) {
-    this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe();
+    element.clickable = true;
+    // this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe();
   }
 
   removeRow(element) {
@@ -90,7 +95,27 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.sendKeysElement(result.element, result.message);
+      element.clickable = false;
+      element.message = result.message;
+      // this.sendKeysElement(result.element, result.message);
+    });
+  }
+
+  runTest() {
+    this.elementActions.forEach(element => {
+      if (element.clickable) {
+        this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe(res => {
+          element.result = res;
+        });
+      } else if (element.message) {
+        this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, element.message)
+          .subscribe(res => {
+            element.result = res;
+          });
+      }
+      setTimeout(() => {
+        console.log('waiting browser to operate');
+      }, 1000);
     });
   }
 }
@@ -100,4 +125,7 @@ export interface ElementAction {
   selectionValue: string;
   selectionType: string;
   selectedElementId: string;
+  clickable: boolean;
+  message: string;
+  result: DefaultResource;
 }
