@@ -1,5 +1,5 @@
 <mat-card class="basic-container" id="main-container">
-  <mat-card-header  class="mat-card-header basic-container" mat-card-title="HEADER">
+  <mat-card-header class="mat-card-header basic-container" mat-card-title="HEADER">
     <mat-card-title>HEADER</mat-card-title>
   </mat-card-header>
 
@@ -20,7 +20,11 @@
         </mat-nav-list>
       </mat-sidenav>
       <mat-sidenav-content mode="side" opened role="navigation">
-        <router-outlet></router-outlet>
+        <mat-card>
+          <mat-card-content>
+            <router-outlet></router-outlet>
+          </mat-card-content>
+        </mat-card>
       </mat-sidenav-content>
     </mat-sidenav-container>
 

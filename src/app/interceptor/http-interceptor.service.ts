@@ -18,7 +18,8 @@ export class HttpInterceptorService implements HttpInterceptor {
 
     request = request.clone({
       setHeaders: {
-        Authorization: isLogin ? '' : 'Bearer ' + this.authenticationService.currentUserValue.accessToken,
+        Authorization: isLogin || !this.authenticationService.currentUserValue ?
+          '' : 'Bearer ' + this.authenticationService.currentUserValue.accessToken,
         'Content-Type': contentType,
         Accept: accept,
         'Access-Control-Allow-Origin': '*',

@@ -22,6 +22,7 @@ import {ErrorInterceptor} from './interceptor/error-interceptor';
 import {LoginComponent} from './login/login.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule} from '@angular/forms';
+import { ReceiveMessageComponent } from './dialogs/receive-message/receive-message.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {FormsModule} from '@angular/forms';
     ManipulateDriverComponent,
     SideNavBarComponent,
     TestCaseCreationComponent,
-    LoginComponent
+    LoginComponent,
+    ReceiveMessageComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +42,7 @@ import {FormsModule} from '@angular/forms';
     FlexLayoutModule,
     FormsModule
   ],
+  entryComponents: [ReceiveMessageComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}],
   bootstrap: [AppComponent]
