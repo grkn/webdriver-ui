@@ -14,7 +14,7 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   elementActions: ElementAction[] = [];
   elementDatasource: MatTableDataSource<ElementAction>;
   selection = new SelectionModel<ElementAction>(false, []);
-  displayedColumns = ['select', 'position', 'selectionType', 'selectionValue', 'selectedElement', 'result', 'actions'];
+  displayedColumns = ['select', 'position', 'selectionType', 'selectionValue', 'selectedElement', 'actions', 'result'];
   navigateUrl: string;
   selectionValue: string;
   selectionType: string;
@@ -103,19 +103,21 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
 
   runTest() {
     this.elementActions.forEach(element => {
-      if (element.clickable) {
-        this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe(res => {
-          element.result = res;
+
+      this.manipulateservice.findElementBy(element.selectionType, element.selectionValue, this.sessionId)
+        .subscribe((item: any) => {
+          element.selectedElementId = item.value.ELEMENT;
+          if (element.clickable) {
+            this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe(res => {
+              element.result = res;
+            });
+          } else if (element.message) {
+            this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, element.message)
+              .subscribe(res => {
+                element.result = res;
+              });
+          }
         });
-      } else if (element.message) {
-        this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, element.message)
-          .subscribe(res => {
-            element.result = res;
-          });
-      }
-      setTimeout(() => {
-        console.log('waiting browser to operate');
-      }, 1000);
     });
   }
 }
