@@ -86,7 +86,7 @@
                 <button mat-stroked-button (click)="findElementBy(element)">Find Element</button>
                 <button mat-flat-button [disabled]="!element.selectedElementId" (click)="openDialog(element)">Send Keys</button>
                 <button mat-flat-button [disabled]="!element.selectedElementId" (click)="clickElement(element)">Click Element</button>
-                <button mat-flat-button [disabled]="!element.selectedElementId" (click)="removeRow(element)">Remove</button>
+                <button mat-flat-button (click)="removeRow(element)">Remove</button>
               </td>
             </ng-container>
 
