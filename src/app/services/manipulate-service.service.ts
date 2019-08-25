@@ -4,6 +4,7 @@ import {SessionIdResource} from '../models/session-id-resource';
 import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {DefaultResource} from '../models/default-resource';
+import {ElementAction} from '../manipulate-driver/manipulate-driver.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,30 +19,40 @@ export class ManipulateServiceService {
       `${environment.apiUrl}/tanistan/driver/session/${sessionId}`).pipe(map(item => item));
   }
 
-  getSession() {
-    return this.httpClient.post<SessionIdResource>(
-      `${environment.apiUrl}/tanistan/driver/session`, {desiredCapabilities: {}}).pipe(map(item => item));
+  async getSession() {
+    return await this.httpClient.post<SessionIdResource>(
+      `${environment.apiUrl}/tanistan/driver/session`, {desiredCapabilities: {}}).toPromise().then(item => item);
   }
 
-  navigateToUrl(url: string, sessionId: string) {
-    return this.httpClient.post<DefaultResource>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/url`, {url}).pipe(map(item => item));
+  async navigateToUrl(url: string, sessionId: string) {
+    return await this.httpClient.post<DefaultResource>(
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/url`, {url}).toPromise().then(item => item);
   }
 
-  findElementBy(type: string, value: string, sessionId: string) {
-    return this.httpClient.post<DefaultResource>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element`, {using: type, value}).pipe(map(item => item));
+  async findElementBy(type: string, value: string, sessionId: string) {
+    return await this.httpClient.post<DefaultResource>(
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element`, {using: type, value}).toPromise().then(item => item);
   }
 
-  sendKeysElement(sessionId: string, elementId: string, message: string) {
-    return this.httpClient.post<DefaultResource>(
+  async sendKeysElement(sessionId: string, elementId: string, message: string) {
+    return await this.httpClient.post<DefaultResource>(
       `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${elementId}/value`,
-      {value: [message]}).pipe(map(item => item));
+      {value: [message]}).toPromise().then(item => item);
   }
 
-  clickElement(sessionId: string, elementId: string) {
-    return this.httpClient.post<DefaultResource>(
+  async clickElement(sessionId: string, elementId: string) {
+    return await  this.httpClient.post<DefaultResource>(
       `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${elementId}/click`,
-      {}).pipe(map(item => item));
+      {}).toPromise().then(item => item);
+  }
+
+  saveTest(userId: string, testCommands: ElementAction[], name: string) {
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/user/${userId}`, {testCommands, name})
+      .pipe(map(item => item));
+  }
+
+  findAllTest(userId: string, page: number, size: number) {
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/user/${userId}/all?page=${page}&size=${size}`)
+      .pipe(map(item => item));
   }
 }

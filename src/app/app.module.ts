@@ -5,14 +5,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ManipulateDriverComponent} from './manipulate-driver/manipulate-driver.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatDrawerContainer,
-  MatSidenavContainer,
-  MatSidenavModule
-} from '@angular/material';
 import {MaterialModules} from './material-design-import/MaterialDesignImport';
 import {SideNavBarComponent} from './side-nav-bar/side-nav-bar.component';
 import {TestCaseCreationComponent} from './test-case-creation/test-case-creation.component';
@@ -22,7 +14,9 @@ import {ErrorInterceptor} from './interceptor/error-interceptor';
 import {LoginComponent} from './login/login.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule} from '@angular/forms';
-import { ReceiveMessageComponent } from './dialogs/receive-message/receive-message.component';
+import {ReceiveMessageComponent} from './dialogs/receive-message/receive-message.component';
+import {LoginResolverService} from './resolvers/login-resolver.service';
+import {ManipulateDriverFetchResolverService} from './resolvers/manipulate-driver-fetch-resolver.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +38,8 @@ import { ReceiveMessageComponent } from './dialogs/receive-message/receive-messa
   ],
   entryComponents: [ReceiveMessageComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}],
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+    , LoginResolverService, ManipulateDriverFetchResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

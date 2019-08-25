@@ -1,124 +1,107 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ManipulateServiceService} from '../services/manipulate-service.service';
-import {MatDialog, MatDialogRef, MatTableDataSource} from '@angular/material';
-import {SelectionModel} from '@angular/cdk/collections';
-import {ReceiveMessageComponent} from '../dialogs/receive-message/receive-message.component';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {DefaultResource} from '../models/default-resource';
+import {AuthenticationService} from '../services/authenticate';
+import {ActivatedRoute, ActivatedRouteSnapshot, Route} from '@angular/router';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-manipulate-driver',
   templateUrl: './manipulate-driver.component.html',
   styleUrls: ['./manipulate-driver.component.scss']
 })
 export class ManipulateDriverComponent implements OnInit, OnDestroy {
-  elementActions: ElementAction[] = [];
-  elementDatasource: MatTableDataSource<ElementAction>;
-  selection = new SelectionModel<ElementAction>(false, []);
-  displayedColumns = ['select', 'position', 'selectionType', 'selectionValue', 'selectedElement', 'actions', 'result'];
-  navigateUrl: string;
+  testCommands: ElementAction[] = [];
   selectionValue: string;
   selectionType: string;
   sessionId: string;
-  dialogRef: MatDialogRef<ManipulateDriverComponent>;
-  selectedElement: ElementAction;
-  message: string;
-  enableElementSelectionTab: boolean = false;
+  displayedColumns: string[] = ['id', 'name', 'createdDate' , 'actions'];
+  testDataSource = new MatTableDataSource<TestModel>([]);
+  createTestPage: boolean = false;
 
-  constructor(private manipulateservice: ManipulateServiceService, public dialog: MatDialog) {
-    this.elementDatasource = new MatTableDataSource<ElementAction>(this.elementActions);
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  testCaseName: string;
+
+
+  constructor(private manipulateservice: ManipulateServiceService,
+              private authenticationService: AuthenticationService, private route: ActivatedRoute) {
+    this.testDataSource.paginator = this.paginator;
+    this.route.data.subscribe(item => {
+      this.testDataSource = new MatTableDataSource(item.testCaseResolver.content);
+    });
   }
 
   ngOnInit(): void {
   }
 
-  getSession() {
-    this.manipulateservice.getSession().subscribe(session => {
-      this.sessionId = session.sessionId;
-    });
-  }
-
-  navigateToUrl() {
-    this.manipulateservice.navigateToUrl(this.navigateUrl, this.sessionId).subscribe(item => {
-      this.enableElementSelectionTab = true;
-    });
+  applyFilter(filterValue: string) {
+    this.testDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   addElementAction() {
-    this.elementActions.push({
-      position: this.elementActions.length,
+    this.testCommands.push({
+      position: this.testCommands.length,
       selectionType: this.selectionType,
       selectionValue: this.selectionValue,
       selectedElementId: '',
       message: '',
       result: null,
-      clickable: false
+      type: '',
+      navigateUrl: ''
     });
-    this.elementDatasource = new MatTableDataSource(this.elementActions);
-  }
-
-  selectLabel(row?: ElementAction): string {
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
-
-  findElementBy(element: ElementAction) {
-    this.manipulateservice.findElementBy(element.selectionType, element.selectionValue, this.sessionId)
-      .subscribe((item: any) => element.selectedElementId = item.value.ELEMENT);
   }
 
   ngOnDestroy(): void {
     this.manipulateservice.killSession(this.sessionId).subscribe();
   }
 
-  sendKeysElement(element: ElementAction, message: string) {
-    // this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, message)
-    //   .subscribe(item => {
-    //     this.selectedElement = null, this.message = null;
-    //   });
-  }
-
-  clickElement(element: ElementAction) {
-    element.clickable = true;
-    // this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe();
-  }
-
   removeRow(element) {
-    const index = this.elementActions.indexOf(element)
-    this.elementActions.splice(index, 1);
-    this.elementDatasource = new MatTableDataSource(this.elementActions);
+    const index = this.testCommands.indexOf(element)
+    this.testCommands.splice(index, 1);
   }
 
-  openDialog(element: ElementAction) {
-    this.selectedElement = element;
-    const dialogRef = this.dialog.open(ReceiveMessageComponent, {
-      width: '250px',
-      data: {element, message: this.message}
-    });
+  async runTest() {
+    this.sessionId = (await this.manipulateservice.getSession()).sessionId;
+    for (let i = 0; i < this.testCommands.length; i++) {
+      const command: any = this.testCommands[i];
+      command.selectedElementId = (await
+        this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
 
-    dialogRef.afterClosed().subscribe(result => {
-      element.clickable = false;
-      element.message = result.message;
-      // this.sendKeysElement(result.element, result.message);
-    });
+      if (command.type === 'click') {
+        command.result = (await this.manipulateservice.clickElement(this.sessionId, command.selectedElementId));
+
+      } else if (command.type === 'sendKey') {
+        command.result = (await this.manipulateservice.sendKeysElement(this.sessionId, command.selectedElementId, command.message));
+
+      } else if (command.type === 'goToUrl') {
+        command.result = (await this.manipulateservice.navigateToUrl(command.navigateUrl, this.sessionId));
+      }
+
+      if (command.result.status !== 0) {
+        return;
+      }
+
+    }
   }
 
-  runTest() {
-    this.elementActions.forEach(element => {
-
-      this.manipulateservice.findElementBy(element.selectionType, element.selectionValue, this.sessionId)
-        .subscribe((item: any) => {
-          element.selectedElementId = item.value.ELEMENT;
-          if (element.clickable) {
-            this.manipulateservice.clickElement(this.sessionId, element.selectedElementId).subscribe(res => {
-              element.result = res;
-            });
-          } else if (element.message) {
-            this.manipulateservice.sendKeysElement(this.sessionId, element.selectedElementId, element.message)
-              .subscribe(res => {
-                element.result = res;
-              });
-          }
-        });
+  saveTest() {
+    this.manipulateservice.saveTest(this.authenticationService.currentUserValue.id, this.testCommands, this.testCaseName).subscribe(res => {
+      if (res) {
+        this.testDataSource.data.push(res);
+        this.testDataSource = new MatTableDataSource(this.testDataSource.data);
+      }
     });
+    this.createTestPage = false;
+  }
+
+  createTest() {
+    this.createTestPage = true;
+  }
+
+  openTestCommands(element: TestModel) {
+    this.createTestPage = true;
+    this.testCommands = element.testCommands;
+    this.testCaseName = element.name;
   }
 }
 
@@ -127,7 +110,15 @@ export interface ElementAction {
   selectionValue: string;
   selectionType: string;
   selectedElementId: string;
-  clickable: boolean;
   message: string;
   result: DefaultResource;
+  type: string;
+  navigateUrl: string;
+}
+
+export interface TestModel {
+  id: string;
+  name: string;
+  createdDate: Date;
+  testCommands: ElementAction[];
 }

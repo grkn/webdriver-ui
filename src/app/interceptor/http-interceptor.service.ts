@@ -16,6 +16,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     const accept = isLogin ? ['application/x-www-form-urlencoded'] : ['application/json'];
     const withCredentials = isLogin ? false : true;
 
+
     request = request.clone({
       setHeaders: {
         Authorization: isLogin || !this.authenticationService.currentUserValue ?

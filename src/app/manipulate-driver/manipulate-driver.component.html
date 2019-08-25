@@ -1,32 +1,69 @@
-<mat-tab-group mat-align-tabs="getSession">
-  <mat-tab label="Create Session">
+<mat-card *ngIf="!createTestPage">
+  <mat-card-header>
+    <mat-card-title>Create Runnable Test</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="mat-elevation-z8">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+      <button style="float:right" mat-flat-button color="primary" (click)="createTest()">Create</button>
+      <table mat-table [dataSource]="testDataSource">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> Id</th>
+          <td mat-cell *matCellDef="let element"> {{element.id}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name</th>
+          <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdDate">
+          <th mat-header-cell *matHeaderCellDef> Created Date</th>
+          <td mat-cell *matCellDef="let element"> {{element.createdDate}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-flat-button color="primary" (click)="openTestCommands(element)">Edit</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card-content>
+  <mat-card-content></mat-card-content>
+</mat-card>
+<mat-card *ngIf="createTestPage">
+  <mat-card-content>
+    <mat-form-field>
+      <input matInput [(ngModel)]="testCaseName" placeholder="Test Case Name"/>
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
+
+<mat-tab-group mat-align-tabs="elementActions" *ngIf="createTestPage">
+  <mat-tab label="New Automation Test">
     <mat-card>
-      <mat-card-header>
-        <mat-card-title>{{sessionId ? 'Session : '+ sessionId : 'Please Create Session To Continue'}}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <button color="primary" mat-raised-button (click)="getSession()">Create Session</button>
-      </mat-card-content>
-    </mat-card>
-  </mat-tab>
-</mat-tab-group>
-<br/>
-<mat-tab-group mat-align-tabs="elementActions" *ngIf="sessionId">
-  <mat-tab label="Navigate Action">
-    <mat-card>
-      <mat-card-content>
+      <mat-card-content *ngFor="let command of testCommands">
         <mat-form-field>
-          <input matInput placeholder="Navigation Url" [(ngModel)]="navigateUrl"/>
+          <mat-select [(ngModel)]="command.type" placeholder="Actions">
+            <mat-option>None</mat-option>
+            <mat-option value="goToUrl">Navigate</mat-option>
+            <mat-option value="maximize">Maximize</mat-option>
+            <mat-option value="sendKey">Send Key</mat-option>
+            <mat-option value="click">Click Element</mat-option>
+          </mat-select>
         </mat-form-field>
-        <button mat-button (click)="navigateToUrl()">Navigate</button>
-      </mat-card-content>
-    </mat-card>
-  </mat-tab>
-  <mat-tab label="Element Action" *ngIf="enableElementSelectionTab">
-    <mat-card>
-      <mat-card-content>
-        <mat-form-field>
-          <mat-select [(ngModel)]="selectionType" placeholder="Selection Type">
+        <mat-form-field *ngIf="command.type == 'sendKey' || command.type == 'click'">
+          <mat-select [(ngModel)]="command.selectionType" placeholder="Selection Type">
             <mat-option>None</mat-option>
             <mat-option value="id">id</mat-option>
             <mat-option value="xpath">xpath</mat-option>
@@ -38,77 +75,25 @@
             <mat-option value="tag name">tag name</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Element Selector" [(ngModel)]="selectionValue"/>
+        <mat-form-field *ngIf="command.type == 'sendKey' || command.type == 'click'">
+          <input matInput placeholder="Element Selector" [(ngModel)]="command.selectionValue"/>
         </mat-form-field>
-        <button mat-button (click)="addElementAction()">Add</button>
+        <mat-form-field *ngIf="command.type == 'goToUrl'">
+          <input matInput placeholder="Navigation Url" [(ngModel)]="command.navigateUrl"/>
+        </mat-form-field>
+        <mat-form-field *ngIf="command.type == 'sendKey'">
+          <input matInput placeholder="Input" [(ngModel)]="command.message"/>
+        </mat-form-field>
+        <span>
+          Result: {{!command.result ? '' : command.result.status == 0 ? 'Success' :
+          command.result.value | json}}
+        </span>
+        <button mat-button (click)="removeRow(command)">Remove</button>
       </mat-card-content>
-      <mat-card-content>
-        <div class="example-container mat-elevation-z8">
-          <table mat-table [dataSource]="elementDatasource">
+      <button mat-button (click)="addElementAction()">Add</button>
+      <button mat-flat-button color="primary" (click)="saveTest()">Save</button>
 
-            <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
-                Select
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null"
-                              [checked]="selection.isSelected(row)"
-                              [aria-label]="selectLabel(row)">
-                </mat-checkbox>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="position">
-              <th mat-header-cell *matHeaderCellDef> Position</th>
-              <td mat-cell *matCellDef="let element"> {{element.position}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="selectionType">
-              <th mat-header-cell *matHeaderCellDef> Selection Type</th>
-              <td mat-cell *matCellDef="let element"> {{element.selectionType}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="selectionValue">
-              <th mat-header-cell *matHeaderCellDef> Selection Value</th>
-              <td mat-cell *matCellDef="let element"> {{element.selectionValue}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="selectedElement">
-              <th mat-header-cell *matHeaderCellDef> Selected Element</th>
-              <td mat-cell *matCellDef="let element"> {{element.selectedElementId}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="result">
-              <th mat-header-cell *matHeaderCellDef> Result </th>
-              <td mat-cell *matCellDef="let element">{{!element.result ? '' : element.result.status == 0 ? 'Success' :
-                element.result.value | json}}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef> Actions</th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-stroked-button color="primary" (click)="findElementBy(element)">Find Element</button>
-                <button mat-flat-button color="primary" [disabled]="!element.selectedElementId"
-                        (click)="openDialog(element)">Send Keys
-                </button>
-                <button mat-flat-button color="primary" [disabled]="!element.selectedElementId"
-                        (click)="clickElement(element)">Click Element
-                </button>
-                <button mat-flat-button color="primary" (click)="removeRow(element)">Remove</button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                (click)="selection.toggle(row)">
-          </table>
-        </div>
-        <button mat-button color="primary" (click)="runTest()">Run Tests</button>
-      </mat-card-content>
-
+      <button mat-button color="primary" (click)="runTest()">Run Tests</button>
     </mat-card>
   </mat-tab>
 </mat-tab-group>

@@ -20,6 +20,10 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
+  public get user(): Observable<User> {
+    return this.currentUser;
+  }
+
   login(username: string, password: string) {
     const body = new HttpParams()
       .set('username', username)
