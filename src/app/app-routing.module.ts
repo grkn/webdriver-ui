@@ -1,18 +1,27 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {ManipulateDriverComponent} from './manipulate-driver/manipulate-driver.component';
-import {TestCaseCreationComponent} from './test-case-creation/test-case-creation.component';
 import {LoginComponent} from './login/login.component';
 import {LoginResolverService} from './resolvers/login-resolver.service';
 import {ManipulateDriverFetchResolverService} from './resolvers/manipulate-driver-fetch-resolver.service';
+import {TestSuiteComponent} from './test-suite/test-suite.component';
+import {TestSuiteFetchResolver} from './resolvers/test-suite-fetch-resolver.service';
 
 const routes: Routes = [
   {
     path: 'manipulate',
     component: ManipulateDriverComponent,
-    resolve: {manipulateResolver: LoginResolverService, testCaseResolver: ManipulateDriverFetchResolverService}
+    resolve: {loginResolver: LoginResolverService, testCaseResolver: ManipulateDriverFetchResolverService}
   },
-  {path: 'testcasecreation', component: TestCaseCreationComponent, resolve: {testcaseCreationResolver: LoginResolverService}},
+  {
+    path: 'testsuites',
+    component: TestSuiteComponent,
+    resolve: {
+      loginResolver: LoginResolverService,
+      testCaseResolver: ManipulateDriverFetchResolverService,
+      testSuiteResolver: TestSuiteFetchResolver
+    }
+  },
   {path: 'login', component: LoginComponent}
 ];
 

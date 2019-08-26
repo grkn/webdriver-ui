@@ -1,9 +1,10 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ManipulateServiceService} from '../services/manipulate-service.service';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {DefaultResource} from '../models/default-resource';
 import {AuthenticationService} from '../services/authenticate';
 import {ActivatedRoute, ActivatedRouteSnapshot, Route} from '@angular/router';
+import {TestModel} from '../models/test-model';
+import {ElementAction} from '../models/element-action';
 
 @Component({
   selector: 'app-manipulate-driver',
@@ -15,9 +16,10 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   selectionValue: string;
   selectionType: string;
   sessionId: string;
-  displayedColumns: string[] = ['id', 'name', 'createdDate' , 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'createdDate', 'actions'];
   testDataSource = new MatTableDataSource<TestModel>([]);
   createTestPage: boolean = false;
+  selectedTestCaseId: string;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   testCaseName: string;
@@ -85,40 +87,32 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   }
 
   saveTest() {
-    this.manipulateservice.saveTest(this.authenticationService.currentUserValue.id, this.testCommands, this.testCaseName).subscribe(res => {
-      if (res) {
-        this.testDataSource.data.push(res);
-        this.testDataSource = new MatTableDataSource(this.testDataSource.data);
-      }
-    });
-    this.createTestPage = false;
+    this.manipulateservice.saveTest(this.authenticationService.currentUserValue.id,
+      this.testCommands, this.testCaseName, this.selectedTestCaseId)
+      .subscribe(res => {
+        if (res) {
+          this.manipulateservice.findAllTest(this.authenticationService.currentUserValue.id, 0, 1000).subscribe(testModalPageable => {
+            this.testDataSource = new MatTableDataSource(testModalPageable.content);
+            this.createTestPage = false;
+          });
+        }
+      });
   }
 
-  createTest() {
+  openCreateTestPage() {
     this.createTestPage = true;
   }
 
-  openTestCommands(element: TestModel) {
+  openEditTestPage(element: TestModel) {
     this.createTestPage = true;
     this.testCommands = element.testCommands;
     this.testCaseName = element.name;
+    this.selectedTestCaseId = element.id;
+  }
+
+  openListPage() {
+    this.createTestPage = false;
   }
 }
 
-export interface ElementAction {
-  position: number;
-  selectionValue: string;
-  selectionType: string;
-  selectedElementId: string;
-  message: string;
-  result: DefaultResource;
-  type: string;
-  navigateUrl: string;
-}
 
-export interface TestModel {
-  id: string;
-  name: string;
-  createdDate: Date;
-  testCommands: ElementAction[];
-}

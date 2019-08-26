@@ -1,0 +1,62 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      Test Suites
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field>
+      <input matInput [(ngModel)]="newTestSuiteName"/>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="addTestSuite(suites)">Add Test</button>
+
+    <p-treeTable #suites [value]="treeNodes">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Selection</th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>TestCases</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+        <tr [ttRow]="rowNode">
+          <td>
+            <mat-radio-button style="text-align: center" (click)="selectedNode(rowNode)"></mat-radio-button>
+            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+          </td>
+          <td>
+            {{rowData.id}}
+          </td>
+          <td>
+            {{rowData.name}}
+          </td>
+          <td>
+            <span *ngFor="let test of rowData.testCases">{{test.name}},</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Test Cases</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+
+    <p-pickList (onMoveToTarget)="addTestCaseToSuite($event)" (onMoveToSource)="removeTestCaseToSuite($event)"
+                [source]="source" [target]="target" [responsive]="true" filterBy="name"
+                dragdrop="true" sourceFilterPlaceholder="Search by name" targetFilterPlaceholder="Search by name">
+      <ng-template let-testModel pTemplate="item">
+        <div class="ui-helper-clearfix">
+          <div style="font-size:14px;margin:15px 5px 0 0">{{testModel.name}} - {{testModel.createdDate |
+            date}}
+          </div>
+        </div>
+      </ng-template>
+    </p-pickList>
+
+  </mat-card-content>
+</mat-card>

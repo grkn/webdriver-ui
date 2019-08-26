@@ -4,14 +4,15 @@ import {SessionIdResource} from '../models/session-id-resource';
 import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {DefaultResource} from '../models/default-resource';
-import {ElementAction} from '../manipulate-driver/manipulate-driver.component';
+import {ToastrService} from 'ngx-toastr';
+import {ElementAction} from '../models/element-action';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManipulateServiceService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private toastr: ToastrService) {
   }
 
   killSession(sessionId: string) {
@@ -46,13 +47,23 @@ export class ManipulateServiceService {
       {}).toPromise().then(item => item);
   }
 
-  saveTest(userId: string, testCommands: ElementAction[], name: string) {
-    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/user/${userId}`, {testCommands, name})
-      .pipe(map(item => item));
+  saveTest(userId: string, testCommands: ElementAction[], name: string, id: string) {
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/user/${userId}`, {testCommands, name, id})
+      .pipe(map(item => {
+        if (id) {
+          this.toastr.success('You have successfully edited test case.');
+        } else {
+          this.toastr.success('You have successfully saved test case.');
+        }
+        return item;
+      }));
   }
 
   findAllTest(userId: string, page: number, size: number) {
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/user/${userId}/all?page=${page}&size=${size}`)
-      .pipe(map(item => item));
+      .pipe(map(item => {
+        return item;
+      }));
   }
+
 }

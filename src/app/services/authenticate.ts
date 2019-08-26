@@ -5,13 +5,14 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {User} from '../models/user';
 import {environment} from '../../environments/environment';
 import {map, tap} from 'rxjs/operators';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private toastr: ToastrService) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -33,23 +34,8 @@ export class AuthenticationService {
       user.accountPhrase = window.btoa(password);
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.currentUserSubject.next(user);
+      this.toastr.success('You have successfully logged in.');
       return user;
     }));
-  }
-
-  async oauth(clientId: string, clientSecret: string) {
-    // const authorizeUrl = `${environment.apiUrl}/oauth/authorize?client_id=${clientId}&response_type=code`;
-    // return await this.http.get<any>(authorizeUrl, {}).pipe(map(respons => {
-    //
-    // }));
-
-    const authUrl = `${environment.apiUrl}/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`;
-    return await this.http.post<any>(authUrl, {});
-  }
-
-  logout() {
-    // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
   }
 }

@@ -7,7 +7,6 @@ import {ManipulateDriverComponent} from './manipulate-driver/manipulate-driver.c
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModules} from './material-design-import/MaterialDesignImport';
 import {SideNavBarComponent} from './side-nav-bar/side-nav-bar.component';
-import {TestCaseCreationComponent} from './test-case-creation/test-case-creation.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {HttpInterceptorService} from './interceptor/http-interceptor.service';
 import {ErrorInterceptor} from './interceptor/error-interceptor';
@@ -17,15 +16,20 @@ import {FormsModule} from '@angular/forms';
 import {ReceiveMessageComponent} from './dialogs/receive-message/receive-message.component';
 import {LoginResolverService} from './resolvers/login-resolver.service';
 import {ManipulateDriverFetchResolverService} from './resolvers/manipulate-driver-fetch-resolver.service';
+import {ToastrModule} from 'ngx-toastr';
+import {TestSuiteComponent} from './test-suite/test-suite.component';
+import {PickListModule} from 'primeng/picklist';
+import {TestSuiteFetchResolver} from './resolvers/test-suite-fetch-resolver.service';
+import {TreeTableModule} from 'primeng/treetable';
 
 @NgModule({
   declarations: [
     AppComponent,
     ManipulateDriverComponent,
     SideNavBarComponent,
-    TestCaseCreationComponent,
     LoginComponent,
-    ReceiveMessageComponent
+    ReceiveMessageComponent,
+    TestSuiteComponent
   ],
   imports: [
     BrowserModule,
@@ -34,12 +38,19 @@ import {ManipulateDriverFetchResolverService} from './resolvers/manipulate-drive
     MaterialModules,
     HttpClientModule,
     FlexLayoutModule,
-    FormsModule
+    FormsModule,
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
+    PickListModule,
+    TreeTableModule
   ],
   entryComponents: [ReceiveMessageComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-    , LoginResolverService, ManipulateDriverFetchResolverService],
+    , LoginResolverService, ManipulateDriverFetchResolverService, TestSuiteFetchResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule {

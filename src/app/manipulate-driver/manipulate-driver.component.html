@@ -1,6 +1,6 @@
 <mat-card *ngIf="!createTestPage">
   <mat-card-header>
-    <mat-card-title>Create Runnable Test</mat-card-title>
+    <mat-card-title>Test Case Page</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
@@ -8,7 +8,7 @@
       <mat-form-field>
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
-      <button style="float:right" mat-flat-button color="primary" (click)="createTest()">Create</button>
+      <button style="float:right" mat-flat-button color="primary" (click)="openCreateTestPage()">Create</button>
       <table mat-table [dataSource]="testDataSource">
 
         <ng-container matColumnDef="id">
@@ -23,13 +23,13 @@
 
         <ng-container matColumnDef="createdDate">
           <th mat-header-cell *matHeaderCellDef> Created Date</th>
-          <td mat-cell *matCellDef="let element"> {{element.createdDate}}</td>
+          <td mat-cell *matCellDef="let element"> {{element.createdDate | date}}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-flat-button color="primary" (click)="openTestCommands(element)">Edit</button>
+            <button mat-flat-button color="primary" (click)="openEditTestPage(element)">Edit</button>
           </td>
         </ng-container>
 
@@ -84,9 +84,10 @@
         <mat-form-field *ngIf="command.type == 'sendKey'">
           <input matInput placeholder="Input" [(ngModel)]="command.message"/>
         </mat-form-field>
-        <span>
-          Result: {{!command.result ? '' : command.result.status == 0 ? 'Success' :
-          command.result.value | json}}
+        <span [class]="!command.result ? '' : command.result.status == 0 ? 'greenColor' :
+        'redColor'">
+        Result: {{!command.result ? '' : command.result.status == 0 ? 'Success' :
+        command.result.value | json}}
         </span>
         <button mat-button (click)="removeRow(command)">Remove</button>
       </mat-card-content>
@@ -94,6 +95,7 @@
       <button mat-flat-button color="primary" (click)="saveTest()">Save</button>
 
       <button mat-button color="primary" (click)="runTest()">Run Tests</button>
+      <button mat-button color="primary" (click)="openListPage()">Back</button>
     </mat-card>
   </mat-tab>
 </mat-tab-group>
