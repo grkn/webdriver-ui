@@ -1,38 +1,33 @@
 <mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      Test Suites
-    </mat-card-title>
-  </mat-card-header>
   <mat-card-content>
     <mat-form-field>
-      <input matInput [(ngModel)]="newTestSuiteName"/>
+      <input matInput placeholder="New Suite Name" [(ngModel)]="newTestSuiteName"/>
     </mat-form-field>
-    <button mat-flat-button color="primary" (click)="addTestSuite(suites)">Add Test</button>
+    <button mat-flat-button color="primary" (click)="addTestSuite(suites)">New Suite</button>
 
     <p-treeTable #suites [value]="treeNodes">
       <ng-template pTemplate="header">
         <tr>
-          <th>Selection</th>
-          <th>Id</th>
+          <th style="width: 50px">Selection</th>
           <th>Name</th>
-          <th>TestCases</th>
+          <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
         <tr [ttRow]="rowNode">
           <td>
             <mat-radio-button style="text-align: center" (click)="selectedNode(rowNode)"></mat-radio-button>
+          </td>
+          <td>
             <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-          </td>
-          <td>
-            {{rowData.id}}
-          </td>
-          <td>
+            <i style="font-size:25px" class="pi pi-folder-open" *ngIf="selectedTestSuiteId == rowNode.node"></i>
+            <i style="font-size:25px" class="pi pi-folder" *ngIf="selectedTestSuiteId != rowNode.node"></i>
             {{rowData.name}}
           </td>
           <td>
-            <span *ngFor="let test of rowData.testCases">{{test.name}},</span>
+            <button mat-flat-button color="primary" (click)="runTestSuite(rowNode)">Run Test Suite</button>
+            <button mat-flat-button color="primary" (click)="visibilityOfTestCase(rowNode)">Add Test Case
+            </button>
           </td>
         </tr>
       </ng-template>
@@ -40,18 +35,18 @@
 
   </mat-card-content>
 </mat-card>
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Test Cases</mat-card-title>
-  </mat-card-header>
+<mat-card *ngIf="visibilityOfTestCaseList">
   <mat-card-content>
 
-    <p-pickList (onMoveToTarget)="addTestCaseToSuite($event)" (onMoveToSource)="removeTestCaseToSuite($event)"
+    <p-pickList (onMoveToTarget)="addTestCaseToSuite($event)"
+                (onMoveToSource)="removeTestCaseToSuite($event)"
                 [source]="source" [target]="target" [responsive]="true" filterBy="name"
-                dragdrop="true" sourceFilterPlaceholder="Search by name" targetFilterPlaceholder="Search by name">
+                dragdrop="true" sourceFilterPlaceholder="Search by name" sourceHeader="Available Test Cases"
+                targetHeader="Selected Test Cases" targetFilterPlaceholder="Search by name">
       <ng-template let-testModel pTemplate="item">
         <div class="ui-helper-clearfix">
-          <div style="font-size:14px;margin:15px 5px 0 0">{{testModel.name}} - {{testModel.createdDate |
+          <div style="font-size:20px;margin:15px 5px 0 0"><i class="pi pi-file"></i>{{testModel.name}} -
+            {{testModel.createdDate |
             date}}
           </div>
         </div>
@@ -60,3 +55,116 @@
 
   </mat-card-content>
 </mat-card>
+
+<mat-card *ngIf="selectedTestSuiteId">
+  <mat-card-content>
+    <p-table [columns]="cols" [value]="testCaseDataSource"
+             [paginator]="true" [filters]="true"
+             [rows]="10">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Created Date
+          </th>
+          <th>
+            User
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+          <td>
+            {{rowData.name}}
+          </td>
+          <td>
+            {{rowData.createdDate | date}}
+          </td>
+          <td>
+            {{userName}}
+          </td>
+          <td>
+            <button mat-flat-button color="primary" (click)="showRunningTests(rowData.id)">Show Runners</button>
+            <button mat-flat-button color="primary" (click)="showRunningTestsAuto(rowData.id)">Refresh Auto</button>
+            <button mat-flat-button color="primary" (click)="clearAuto(rowData.id)">Clear Auto</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <button mat-flat-button color="primary" (click)="clearAll()">Clear Auto All</button>
+
+    <ul>
+      <li *ngFor="let rInst of (runInstances | async)?.content ">
+        {{rInst}}
+      </li>
+
+    </ul>
+
+    <p-table dataKey="id" [value]="runningInstances" [lazy]="true" (onLazyLoad)="loadRunningInstanceLazy($event)"
+             [paginator]="true"
+             [rows]="10" [totalRecords]="totalRecords">
+      <ng-template pTemplate="header" let-columns="columns">
+        <tr>
+          <th style="width: 3em"></th>
+          <th>Id</th>
+          <th>Test Case Name</th>
+          <th>Start Date</th>
+          <th>Finished Date</th>
+          <th>User Name</th>
+          <th>Running</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+        <tr>
+          <td>
+            <a [pRowToggler]="rowData">
+              <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+            </a>
+          </td>
+          <td>{{rowData.id}}</td>
+          <td>{{rowData.testCaseName}}</td>
+          <td>{{rowData.startDate | date:'medium'}}</td>
+          <td>{{rowData.fisinedDate | date:'medium'}}</td>
+          <td>{{rowData.userName}}</td>
+          <td>{{rowData.running}}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+        <tr>
+          <td colspan="7">
+            <table mat-table [dataSource]="rowData.steps" class="mat-elevation-z8">
+              <ng-container matColumnDef="result">
+                <th mat-header-cell *matHeaderCellDef> Result</th>
+                <td mat-cell *matCellDef="let element"> {{element.result.value}}</td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Status</th>
+                <td mat-cell *matCellDef="let element"> {{element.status}}</td>
+              </ng-container>
+              <ng-container matColumnDef="running">
+                <th mat-header-cell *matHeaderCellDef> Running</th>
+                <td mat-cell *matCellDef="let element"> {{element.runStatus}}</td>
+              </ng-container>
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef> ExecutionTime</th>
+                <td mat-cell *matCellDef="let element"> {{element.executionTime}} ms</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="stepsColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: stepsColumns;"></tr>
+            </table>
+
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </mat-card-content>
+</mat-card>
+

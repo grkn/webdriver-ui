@@ -22,7 +22,7 @@ const routes: Routes = [
       testSuiteResolver: TestSuiteFetchResolver
     }
   },
-  {path: 'login', component: LoginComponent}
+  {path: '**', component: LoginComponent}
 ];
 
 @NgModule({

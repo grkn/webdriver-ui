@@ -21,6 +21,7 @@ import {TestSuiteComponent} from './test-suite/test-suite.component';
 import {PickListModule} from 'primeng/picklist';
 import {TestSuiteFetchResolver} from './resolvers/test-suite-fetch-resolver.service';
 import {TreeTableModule} from 'primeng/treetable';
+import {TableModule} from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {TreeTableModule} from 'primeng/treetable';
       preventDuplicates: true,
     }),
     PickListModule,
-    TreeTableModule
+    TreeTableModule,
+    TableModule
   ],
   entryComponents: [ReceiveMessageComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

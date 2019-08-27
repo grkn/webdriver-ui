@@ -66,4 +66,11 @@ export class ManipulateServiceService {
       }));
   }
 
+  getRunningInstances(testCaseId: string, page: number, size: number) {
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/${testCaseId}/instancerunner/all?page=${page}&size=${size}`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
+
 }

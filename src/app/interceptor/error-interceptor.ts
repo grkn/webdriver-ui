@@ -18,16 +18,21 @@ export class ErrorInterceptor implements HttpInterceptor {
         // auto logout if 401 response returned from api
         this.router.navigate(['/login']);
       }
-      let error = '';
-      err.error.content.message.forEach(item => {
-        error += item + '\n';
-      });
+      if (err.error.content) {
+        let error = '';
+        err.error.content.message.forEach(item => {
+          error += item + '\n';
+        });
 
-      if (!error) {
-        error += err.content.message || err.statusText;
+        if (!error) {
+          error += err.content.message || err.statusText;
+        }
+
+        this.toastrService.error(error);
+      } else {
+        throw err;
       }
 
-      this.toastrService.error(error);
       return EMPTY;
     }));
   }

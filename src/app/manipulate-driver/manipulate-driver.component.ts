@@ -66,13 +66,16 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
     this.sessionId = (await this.manipulateservice.getSession()).sessionId;
     for (let i = 0; i < this.testCommands.length; i++) {
       const command: any = this.testCommands[i];
-      command.selectedElementId = (await
-        this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
+
 
       if (command.type === 'click') {
+        command.selectedElementId = (await
+          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
         command.result = (await this.manipulateservice.clickElement(this.sessionId, command.selectedElementId));
 
       } else if (command.type === 'sendKey') {
+        command.selectedElementId = (await
+          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
         command.result = (await this.manipulateservice.sendKeysElement(this.sessionId, command.selectedElementId, command.message));
 
       } else if (command.type === 'goToUrl') {
@@ -84,6 +87,7 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
       }
 
     }
+    this.manipulateservice.killSession(this.sessionId).subscribe();
   }
 
   saveTest() {
@@ -101,6 +105,9 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
 
   openCreateTestPage() {
     this.createTestPage = true;
+    this.selectedTestCaseId = undefined;
+    this.testCommands = [];
+    this.testCaseName = undefined;
   }
 
   openEditTestPage(element: TestModel) {
