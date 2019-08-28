@@ -25,6 +25,8 @@ export class LoginComponent implements OnInit {
         const redirectUrl = params.redirectUrl;
         if (redirectUrl) {
           this.router.navigate([redirectUrl]);
+        } else {
+          this.router.navigate(['testcases']);
         }
       });
     });

@@ -1,14 +1,14 @@
 <mat-card *ngIf="!createTestPage">
-  <mat-card-header>
-    <mat-card-title>Test Case Page</mat-card-title>
+  <mat-card-header fxLayout="column">
+    <mat-card-title fxFlexAlign="center" style="text-align: center">Test Cases</mat-card-title>
   </mat-card-header>
 
-  <mat-card-content>
-    <div class="mat-elevation-z8">
+  <mat-card-content fxLayout="column">
+    <button mat-flat-button color="primary" routerLink="/testcases/create">Create Test Case</button>
+    <div class="mat-elevation-z8" fxFlexOffset="1.5em">
       <mat-form-field>
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
-      <button style="float:right" mat-flat-button color="primary" (click)="openCreateTestPage()">Create</button>
       <table mat-table [dataSource]="testDataSource">
 
         <ng-container matColumnDef="id">
@@ -29,7 +29,7 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-flat-button color="primary" (click)="openEditTestPage(element)">Edit</button>
+            <button mat-flat-button color="primary" routerLink="/testcases/{{element.id}}">Edit</button>
           </td>
         </ng-container>
 
@@ -50,10 +50,11 @@
 </mat-card>
 
 <mat-tab-group mat-align-tabs="elementActions" *ngIf="createTestPage">
-  <mat-tab label="New Automation Test">
-    <mat-card>
+  <mat-tab class="tab_label_color_white" label="New Test Commands">
+    <mat-card fxFlex="column">
+      <button mat-button color="primary" (click)="addElementAction()">Add Command</button>
       <mat-card-content *ngFor="let command of testCommands">
-        <mat-form-field>
+        <mat-form-field fxFlexOffset="5px">
           <mat-select [(ngModel)]="command.type" placeholder="Actions">
             <mat-option>None</mat-option>
             <mat-option value="goToUrl">Navigate</mat-option>
@@ -62,7 +63,7 @@
             <mat-option value="click">Click Element</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field *ngIf="command.type == 'sendKey' || command.type == 'click'">
+        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
           <mat-select [(ngModel)]="command.selectionType" placeholder="Selection Type">
             <mat-option>None</mat-option>
             <mat-option value="id">id</mat-option>
@@ -75,28 +76,30 @@
             <mat-option value="tag name">tag name</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field *ngIf="command.type == 'sendKey' || command.type == 'click'">
+        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
           <input matInput placeholder="Element Selector" [(ngModel)]="command.selectionValue"/>
         </mat-form-field>
-        <mat-form-field *ngIf="command.type == 'goToUrl'">
+        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'goToUrl'">
           <input matInput placeholder="Navigation Url" [(ngModel)]="command.navigateUrl"/>
         </mat-form-field>
-        <mat-form-field *ngIf="command.type == 'sendKey'">
+        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey'">
           <input matInput placeholder="Input" [(ngModel)]="command.message"/>
         </mat-form-field>
-        <span [class]="!command.result ? '' : command.result.status == 0 ? 'greenColor' :
-        'redColor'">
-        Result: {{!command.result ? '' : command.result.status == 0 ? 'Success' :
-        command.result.value | json}}
-        </span>
+
+        <button mat-button color="primary"  (click)="toogleOverlay($event,overlay,command)">
+          <span [class]="!command.result ? '' : command.result.status == 0 ? 'greenColor' :
+        'redColor'">Result</span>
+        </button>
         <button mat-button (click)="removeRow(command)">Remove</button>
       </mat-card-content>
-      <button mat-button (click)="addElementAction()">Add</button>
+
       <button mat-flat-button color="primary" (click)="saveTest()">Save</button>
 
       <button mat-button color="primary" (click)="runTest()">Run Tests</button>
-      <button mat-button color="primary" (click)="openListPage()">Back</button>
     </mat-card>
   </mat-tab>
 </mat-tab-group>
-
+<p-overlayPanel #overlay>
+  {{!result || !result.result ? '' : result.result.status == 0 ? 'Success' :
+  result.result.value | json}}
+</p-overlayPanel>

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ManipulateServiceService} from '../services/manipulate-service.service';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {AuthenticationService} from '../services/authenticate';
-import {ActivatedRoute, ActivatedRouteSnapshot, Route} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TestModel} from '../models/test-model';
 import {ElementAction} from '../models/element-action';
 
@@ -20,16 +20,28 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   testDataSource = new MatTableDataSource<TestModel>([]);
   createTestPage: boolean = false;
   selectedTestCaseId: string;
+  result: ElementAction;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   testCaseName: string;
 
 
-  constructor(private manipulateservice: ManipulateServiceService,
+  constructor(private manipulateservice: ManipulateServiceService,private router: Router,
               private authenticationService: AuthenticationService, private route: ActivatedRoute) {
     this.testDataSource.paginator = this.paginator;
     this.route.data.subscribe(item => {
-      this.testDataSource = new MatTableDataSource(item.testCaseResolver.content);
+      this.createTestPage = item.typeResolver === 'create' ? true : false;
+      if (this.createTestPage) {
+        this.openCreateTestPage();
+      } else {
+        if (!item.typeResolver) {
+          this.testDataSource = new MatTableDataSource(item.testCaseResolver.content);
+        } else {
+          this.manipulateservice.findTestById(item.typeResolver).subscribe(res => {
+            this.openEditTestPage(res);
+          });
+        }
+      }
     });
   }
 
@@ -97,17 +109,18 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
         if (res) {
           this.manipulateservice.findAllTest(this.authenticationService.currentUserValue.id, 0, 1000).subscribe(testModalPageable => {
             this.testDataSource = new MatTableDataSource(testModalPageable.content);
-            this.createTestPage = false;
+            this.router.navigate(['testcases']);
           });
         }
       });
   }
 
-  openCreateTestPage() {
+  openCreateTestPage(): boolean {
     this.createTestPage = true;
     this.selectedTestCaseId = undefined;
     this.testCommands = [];
     this.testCaseName = undefined;
+    return true;
   }
 
   openEditTestPage(element: TestModel) {
@@ -119,6 +132,11 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
 
   openListPage() {
     this.createTestPage = false;
+  }
+
+  toogleOverlay(event, overlay, command: ElementAction) {
+    this.result = command;
+    overlay.toggle(event);
   }
 }
 

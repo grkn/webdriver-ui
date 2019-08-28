@@ -18,7 +18,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         // auto logout if 401 response returned from api
         this.router.navigate(['/login']);
       }
-      if (err.error.content) {
+      if (err.error && err.error.content) {
         let error = '';
         err.error.content.message.forEach(item => {
           error += item + '\n';

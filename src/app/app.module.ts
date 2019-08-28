@@ -22,6 +22,14 @@ import {PickListModule} from 'primeng/picklist';
 import {TestSuiteFetchResolver} from './resolvers/test-suite-fetch-resolver.service';
 import {TreeTableModule} from 'primeng/treetable';
 import {TableModule} from 'primeng/table';
+import {UserManagementComponent} from './user-management/user-management.component';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {SlideMenuModule} from 'primeng/slidemenu';
+import {TestCaseTypeResolverService} from './resolvers/test-case-type-resolver.service';
+import {UserManagementCreateComponent} from './user-management-create/user-management-create.component';
+import {RoleManagementListComponent} from './role-management-list/role-management-list.component';
+import {RoleManagementCreateComponent} from './role-management-create/role-management-create.component';
+import {AddRoleToUserComponent} from './add-role-to-user/add-role-to-user.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +38,12 @@ import {TableModule} from 'primeng/table';
     SideNavBarComponent,
     LoginComponent,
     ReceiveMessageComponent,
-    TestSuiteComponent
+    TestSuiteComponent,
+    UserManagementComponent,
+    UserManagementCreateComponent,
+    RoleManagementListComponent,
+    RoleManagementCreateComponent,
+    AddRoleToUserComponent
   ],
   imports: [
     BrowserModule,
@@ -47,12 +60,14 @@ import {TableModule} from 'primeng/table';
     }),
     PickListModule,
     TreeTableModule,
-    TableModule
+    TableModule,
+    OverlayPanelModule,
+    SlideMenuModule
   ],
   entryComponents: [ReceiveMessageComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-    , LoginResolverService, ManipulateDriverFetchResolverService, TestSuiteFetchResolver],
+    , LoginResolverService, ManipulateDriverFetchResolverService, TestSuiteFetchResolver, TestCaseTypeResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

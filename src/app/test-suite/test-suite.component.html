@@ -1,5 +1,6 @@
-<mat-card>
-  <mat-card-content>
+<mat-card fxFlex="row">
+  <mat-card-content fxLayoutGap="20px">
+
     <mat-form-field>
       <input matInput placeholder="New Suite Name" [(ngModel)]="newTestSuiteName"/>
     </mat-form-field>
@@ -32,32 +33,33 @@
         </tr>
       </ng-template>
     </p-treeTable>
+    <mat-card *ngIf="visibilityOfTestCaseList">
+      <mat-card-content fxLayoutGap="20px">
 
+        <p-pickList (onMoveToTarget)="addTestCaseToSuite($event)"
+                    (onMoveToSource)="removeTestCaseToSuite($event)"
+                    [source]="source" [target]="target" [responsive]="true" filterBy="name"
+                    dragdrop="true" sourceFilterPlaceholder="Search by name" sourceHeader="Available Test Cases"
+                    targetHeader="Selected Test Cases" targetFilterPlaceholder="Search by name">
+          <ng-template let-testModel pTemplate="item">
+            <div class="ui-helper-clearfix">
+              <div style="font-size:20px;margin:15px 5px 0 0"><i class="pi pi-file"></i>{{testModel.name}} -
+                {{testModel.createdDate |
+                date}}
+              </div>
+            </div>
+          </ng-template>
+        </p-pickList>
+
+      </mat-card-content>
+    </mat-card>
   </mat-card-content>
+
 </mat-card>
-<mat-card *ngIf="visibilityOfTestCaseList">
-  <mat-card-content>
-
-    <p-pickList (onMoveToTarget)="addTestCaseToSuite($event)"
-                (onMoveToSource)="removeTestCaseToSuite($event)"
-                [source]="source" [target]="target" [responsive]="true" filterBy="name"
-                dragdrop="true" sourceFilterPlaceholder="Search by name" sourceHeader="Available Test Cases"
-                targetHeader="Selected Test Cases" targetFilterPlaceholder="Search by name">
-      <ng-template let-testModel pTemplate="item">
-        <div class="ui-helper-clearfix">
-          <div style="font-size:20px;margin:15px 5px 0 0"><i class="pi pi-file"></i>{{testModel.name}} -
-            {{testModel.createdDate |
-            date}}
-          </div>
-        </div>
-      </ng-template>
-    </p-pickList>
-
-  </mat-card-content>
-</mat-card>
-
-<mat-card *ngIf="selectedTestSuiteId">
-  <mat-card-content>
+<mat-card fxFlex="row" *ngIf="selectedTestSuiteId">
+  <mat-card-content fxLayoutGap="20px">
+    <button  mat-flat-button color="primary" (click)="clearAll()">Clear All Listenings </button>
+    <br/>
     <p-table [columns]="cols" [value]="testCaseDataSource"
              [paginator]="true" [filters]="true"
              [rows]="10">
@@ -89,24 +91,15 @@
             {{userName}}
           </td>
           <td>
-            <button mat-flat-button color="primary" (click)="showRunningTests(rowData.id)">Show Runners</button>
+            <button mat-flat-button color="primary" (click)="showRunningTests(rowData.id)">Show Results</button>
             <button mat-flat-button color="primary" (click)="showRunningTestsAuto(rowData.id)">Refresh Auto</button>
-            <button mat-flat-button color="primary" (click)="clearAuto(rowData.id)">Clear Auto</button>
+            <button mat-flat-button color="primary" (click)="clearAuto(rowData.id)">Clear Refresh</button>
           </td>
         </tr>
       </ng-template>
     </p-table>
 
-    <button mat-flat-button color="primary" (click)="clearAll()">Clear Auto All</button>
-
-    <ul>
-      <li *ngFor="let rInst of (runInstances | async)?.content ">
-        {{rInst}}
-      </li>
-
-    </ul>
-
-    <p-table dataKey="id" [value]="runningInstances" [lazy]="true" (onLazyLoad)="loadRunningInstanceLazy($event)"
+    <p-table *ngIf="selectedTestCaseId" dataKey="id" [value]="runningInstances" [lazy]="true" (onLazyLoad)="loadRunningInstanceLazy($event)"
              [paginator]="true"
              [rows]="10" [totalRecords]="totalRecords">
       <ng-template pTemplate="header" let-columns="columns">

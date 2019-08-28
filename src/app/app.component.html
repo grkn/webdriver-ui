@@ -1,37 +1,69 @@
-<mat-card class="basic-container" id="main-container">
-  <mat-card-header class="mat-card-header basic-container" mat-card-title="HEADER">
-    <mat-card-title>HEADER</mat-card-title>
-  </mat-card-header>
-
-  <mat-card-content mat-card-title="Title">
-    <mat-toolbar color="warn">
-      <mat-toolbar-row>
-        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="nav.toggle()" color="primary">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>&nbsp;
-        <span>Menu</span>
-      </mat-toolbar-row>
-    </mat-toolbar>
-
-    <mat-sidenav-container class="basic-container">
-      <mat-sidenav #nav class="nav-container">
-        <mat-nav-list>
-          <app-side-nav-bar [elementRef]="nav"></app-side-nav-bar>
-        </mat-nav-list>
-      </mat-sidenav>
-      <mat-sidenav-content mode="side" opened role="navigation">
-        <mat-card>
-          <mat-card-content>
-            <router-outlet></router-outlet>
-          </mat-card-content>
-        </mat-card>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-
-  </mat-card-content>
-</mat-card>
+<div  class="container" style="align-self: center;align-content: center" gdAreas.xs="header | sidebar | content | footer" gdGap="1em"
+     gdColumns.xs="none"
+     gdAreas.sm="header header | sidebar content | footer footer"
+     gdColumns.sm="20%!"
+     gdAreas.gt-sm="header header header | sidebar content content| footer footer footer"
+     gdColumns.gt-sm="250px auto 120px" gdGap.gt-sm="20px" [ngStyle]="{'max-width': 'auto'}"
+     [ngStyle.gt-sm]="{'max-width': 'auto'}">
 
 
+  <div class="site_header" gdArea="header">
+    <mat-card>
+      <mat-card-title>Test Automation</mat-card-title>
+    </mat-card>
+  </div>
+
+  <div gdArea="sidebar" class="side_bar">
+    <div>
+      <app-side-nav-bar></app-side-nav-bar>
+    </div>
+  </div>
+
+  <div gdArea="content" class="main_content">
+    <router-outlet></router-outlet>
+  </div>
+
+
+  <!-- Site footer -->
+  <footer gdArea="footer" class="site-footer" >
+    <div fxFlex="row">
+      <div >
+        <h6>About</h6>
+        <p class="text-justify">Test Automation is an initiative to help the upcoming
+          programmers with the test. </p>
+      </div>
+
+      <div >
+        <h6>Quick Links</h6>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div fxFlex="row">
+      <div>
+        <div>
+          <p class="copyright-text">Copyright &copy; 2019 All Rights Reserved by
+            <a href="#">Test Automation</a>.
+          </p>
+        </div>
+
+        <div>
+          <ul class="social-icons">
+            <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+            <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr/>
+  </footer>
+
+</div>
 
 
 

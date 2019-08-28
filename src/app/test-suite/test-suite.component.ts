@@ -95,7 +95,7 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   selectedNode(rowNode) {
     this.selectedTestSuiteId = rowNode.node;
-
+    this.selectedTestCaseId = undefined;
     this.manipulateService.findAllTest(this.authService.currentUserValue.id, 0, 2000).subscribe(source => {
 
       this.testSuiteService.findTestBySuiteIdAndUserId(this.authService.currentUserValue.id, this.selectedTestSuiteId.id)
@@ -161,7 +161,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   runTestSuite(rowNode) {
     this.selectedTestSuiteId = rowNode.node;
-    this.testSuiteService.runTests(this.selectedTestSuiteId.id).subscribe();
+
+    this.testSuiteService.runTests(this.selectedTestSuiteId.id).subscribe(res => {
+    });
   }
 
   visibilityOfTestCase(rowNode) {
@@ -174,7 +176,6 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   }
 
   showRunningTests(testCaseId: string) {
-    // this.runInstances = this.manipulateService.getRunningInstances(testCaseId, 0, 2000);
     this.selectedTestCaseId = testCaseId;
     this.loadRunningInstanceLazy(this.savedEvent);
   }
@@ -188,8 +189,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   clearAuto(id: any) {
     this.intervalObject.forEach(item => {
-      if (item.id === id)
+      if (item.id === id) {
         clearInterval(item.intervalId);
+      }
     });
   }
 
@@ -202,11 +204,13 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   loadRunningInstanceLazy(event: any) {
     this.savedEvent = event;
-    this.manipulateService.getRunningInstances(this.selectedTestCaseId, event.first, (event.first + event.rows)).subscribe(res => {
-      this.totalRecords = res.totalElements;
-      this.runningInstances = res.content;
-      this.stepDetailsDatasource = new MatTableDataSource(res.content.steps);
-    });
+    if (this.selectedTestCaseId) {
+      this.manipulateService.getRunningInstances(this.selectedTestCaseId, event.first, (event.first + event.rows)).subscribe(res => {
+        this.totalRecords = res.totalElements;
+        this.runningInstances = res.content;
+        this.stepDetailsDatasource = new MatTableDataSource(res.content.steps);
+      });
+    }
   }
 
   ngOnDestroy(): void {

@@ -3,7 +3,10 @@ export class User {
   accountName: string;
   emailAddress: string;
   accountPhrase: string;
-  firstName: string;
+  name: string;
   lastName: string;
   accessToken: string;
+  userAuthorization: any;
+  middleName: string;
+  birthDay: Date;
 }

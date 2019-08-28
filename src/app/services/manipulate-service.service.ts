@@ -73,4 +73,11 @@ export class ManipulateServiceService {
       }));
   }
 
+  findTestById(testId: string) {
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/${testId}`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
+
 }
