@@ -12,6 +12,7 @@ import {UserManagementCreateComponent} from './user-management-create/user-manag
 import {AddRoleToUserComponent} from './add-role-to-user/add-role-to-user.component';
 import {UserManagementComponent} from './user-management/user-management.component';
 import {RoleManagementCreateComponent} from './role-management-create/role-management-create.component';
+import {UserManagementEditResolverService} from './resolvers/user-management-edit-resolver.service';
 
 const routes: Routes = [
   {
@@ -38,7 +39,18 @@ const routes: Routes = [
   },
   {
     path: 'usermanagement/create',
-    component: UserManagementCreateComponent
+    component: UserManagementCreateComponent,
+    resolve : {
+      loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: 'usermanagement/create/:id',
+    component: UserManagementCreateComponent,
+    resolve : {
+      loginResolver: LoginResolverService,
+      editResolver: UserManagementEditResolverService
+    }
   },
   {
     path: 'usermanagement/role',
@@ -47,10 +59,6 @@ const routes: Routes = [
   {
     path: 'usermanagement/role/create',
     component: RoleManagementCreateComponent
-  },
-  {
-    path: 'usermanagement/role/addroletouser',
-    component: AddRoleToUserComponent
   },
   {path: '**', component: LoginComponent}
 ];

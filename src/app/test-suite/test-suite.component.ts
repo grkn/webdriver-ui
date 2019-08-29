@@ -37,11 +37,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   newTestSuiteName: string;
   foundNode: any;
   visibilityOfTestCaseList: boolean;
-  // Test Case DataTable for suite
   testCaseDataSource: TestModel[] = [];
   userName = this.authService.currentUserValue.accountName ?
     this.authService.currentUserValue.accountName : this.authService.currentUserValue.emailAddress;
-  runInstances: Observable<any>;
   intervalObject = [];
   totalRecords = 0;
   selectedTestCaseId: string;
@@ -103,7 +101,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
           if (res && res.length > 0) {
 
             res.forEach(t => {
-              source.content.splice(this.source.indexOf(t), 1);
+              if (source.content) {
+                source.content = source.content.filter(item => item.id !== t.id);
+              }
             });
             this.source = source.content;
             this.target = res;
@@ -149,10 +149,10 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
       const testCaseId = event.items[0].id;
 
       this.testSuiteService.removeTestCaseFromTestSuite(this.selectedTestSuiteId.id, testCaseId).subscribe(value => {
-        const testModelDeletion = this.selectedTestSuiteId.data.testCases.filter(item => item === testCaseId)
-        const indexToDelete = this.selectedTestSuiteId.data.testCases.indexOf(testModelDeletion);
-        this.selectedTestSuiteId.data.testCases.splice(indexToDelete, 1);
-
+        this.selectedTestSuiteId.data.testCases = this.selectedTestSuiteId.data.testCases.filter(item => {
+          return item.id !== testCaseId;
+        });
+        this.testCaseDataSource = this.selectedTestSuiteId.data.testCases;
       });
     } else {
       this.toastr.info('Please select test suite');
@@ -205,7 +205,7 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   loadRunningInstanceLazy(event: any) {
     this.savedEvent = event;
     if (this.selectedTestCaseId) {
-      this.manipulateService.getRunningInstances(this.selectedTestCaseId, event.first, (event.first + event.rows)).subscribe(res => {
+      this.manipulateService.getRunningInstances(this.selectedTestCaseId, event.first / event.rows, event.rows).subscribe(res => {
         this.totalRecords = res.totalElements;
         this.runningInstances = res.content;
         this.stepDetailsDatasource = new MatTableDataSource(res.content.steps);

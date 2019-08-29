@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {RoleService} from '../services/role.service';
 
 @Component({
   selector: 'app-role-management-create',
@@ -7,9 +8,36 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoleManagementCreateComponent implements OnInit {
 
-  constructor() { }
+  roles: any[] = [];
+
+  constructor(private roleService: RoleService) {
+  }
 
   ngOnInit() {
+  }
+
+  saveRole() {
+    let count = 0;
+    this.roles.forEach(item => {
+      if (item.name.indexOf('ROLE_') !== 0) {
+        this.roles[count].name = 'ROLE_' + item.name;
+      }
+      count++;
+    });
+
+    this.roleService.save(this.roles).subscribe();
+  }
+
+  addNewRole() {
+    this.roles.push({name: ''});
+  }
+
+  removeRole(role: any) {
+    this.roles = this.roles.filter(el => el.name !== role.name);
+  }
+
+  deleteRole(id: string) {
+    this.roleService.delete(id).subscribe();
   }
 
 }

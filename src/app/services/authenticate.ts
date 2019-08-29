@@ -13,7 +13,6 @@ export class AuthenticationService {
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient, private toastr: ToastrService) {
-
   }
 
   public get currentUserValue(): User {
@@ -34,6 +33,7 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.loginUrl}/login`, body.toString()).pipe(map(user => {
       user.accountPhrase = window.btoa(password);
       localStorage.setItem('currentUser', JSON.stringify(user));
+      this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
       this.currentUserSubject.next(user);
       this.toastr.success('You have successfully logged in.');
       return user;

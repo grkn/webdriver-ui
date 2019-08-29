@@ -70,8 +70,7 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   }
 
   removeRow(element) {
-    const index = this.testCommands.indexOf(element)
-    this.testCommands.splice(index, 1);
+    this.testCommands  = this.testCommands.filter(el => el !== element);
   }
 
   async runTest() {

@@ -1,15 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {DialogService, DynamicDialogConfig, DynamicDialogRef} from 'primeng/api';
+import {UserManagementComponent} from '../user-management/user-management.component';
+import {RoleService} from '../services/role.service';
 
 @Component({
-  selector: 'app-add-role-to-user',
   templateUrl: './add-role-to-user.component.html',
-  styleUrls: ['./add-role-to-user.component.scss']
+  providers: [DialogService]
 })
 export class AddRoleToUserComponent implements OnInit {
+  totalElements: number;
+  roles: any;
 
-  constructor() { }
+  constructor(private roleService: RoleService, public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
+  }
+
+
+  loadRolesLazy($event: any) {
+    this.roleService.findAll($event.first / $event.rows, $event.rows).subscribe(res => {
+      this.totalElements = res.totalElements;
+      this.roles = res.content;
+    });
+  }
+
+  selectRole(role: any) {
+    if (role) {
+      this.ref.close(role);
+    } else {
+      this.ref.close(null);
+    }
   }
 
 }

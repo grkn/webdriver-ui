@@ -30,6 +30,10 @@ import {UserManagementCreateComponent} from './user-management-create/user-manag
 import {RoleManagementListComponent} from './role-management-list/role-management-list.component';
 import {RoleManagementCreateComponent} from './role-management-create/role-management-create.component';
 import {AddRoleToUserComponent} from './add-role-to-user/add-role-to-user.component';
+import {FieldsetModule} from 'primeng/fieldset';
+import {UserManagementEditResolverService} from './resolvers/user-management-edit-resolver.service';
+import {DynamicDialogModule} from 'primeng/dynamicdialog';
+import {DialogService} from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -43,7 +47,7 @@ import {AddRoleToUserComponent} from './add-role-to-user/add-role-to-user.compon
     UserManagementCreateComponent,
     RoleManagementListComponent,
     RoleManagementCreateComponent,
-    AddRoleToUserComponent
+    AddRoleToUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,12 +66,15 @@ import {AddRoleToUserComponent} from './add-role-to-user/add-role-to-user.compon
     TreeTableModule,
     TableModule,
     OverlayPanelModule,
-    SlideMenuModule
+    SlideMenuModule,
+    FieldsetModule,
+    DynamicDialogModule
   ],
-  entryComponents: [ReceiveMessageComponent],
+  entryComponents: [ReceiveMessageComponent, AddRoleToUserComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-    , LoginResolverService, ManipulateDriverFetchResolverService, TestSuiteFetchResolver, TestCaseTypeResolverService],
+    , LoginResolverService, ManipulateDriverFetchResolverService,
+    TestSuiteFetchResolver, TestCaseTypeResolverService, UserManagementEditResolverService, DialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

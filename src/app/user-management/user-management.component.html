@@ -4,7 +4,7 @@
     <button mat-flat-button routerLink="/usermanagement/create" color="primary">Create User</button>
     <p-table dataKey="id" [value]="users" [lazy]="true" (onLazyLoad)="loadUsersLazy($event)"
              [paginator]="true"
-             [rows]="5" [totalRecords]="totalElements">
+             [rows]="10" [totalRecords]="totalElements">
       <ng-template pTemplate="header" let-columns="columns">
         <tr>
           <th>Id</th>
@@ -33,6 +33,7 @@
           <td>
             <button mat-flat-button color="primary" routerLink="/usermanagement/create/{{rowData.id}}">Edit</button>
             <button mat-flat-button color="primary" (click)="deleteById(rowData.id)">Delete</button>
+            <button mat-flat-button color="primary" (click)="show(rowData.id)">Add Role</button>
           </td>
         </tr>
       </ng-template>

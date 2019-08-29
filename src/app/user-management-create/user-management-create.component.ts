@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from '../models/user';
 import {UserService} from '../services/user.service';
 import {ToastrService} from 'ngx-toastr';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-user-management-create',
@@ -23,15 +24,30 @@ export class UserManagementCreateComponent implements OnInit {
     birthDay: new Date()
   };
 
-  constructor(private userService: UserService, private toastr: ToastrService) {
+  constructor(private userService: UserService, private toastr: ToastrService,
+              private router: Router, private activeRoute: ActivatedRoute) {
+    activeRoute.data.subscribe(item => {
+      if (item && item.editResolver) {
+        this.user = item.editResolver;
+      }
+    });
   }
 
   ngOnInit() {
   }
 
   saveUser() {
-    this.userService.save(this.user).subscribe(res => {
-      this.toastr.success('User created successfully');
-    });
+    if(this.user.id) {
+      this.userService.edit(this.user).subscribe(res => {
+        this.toastr.success('User is edited successfully');
+        this.router.navigate(['usermanagement']);
+      });
+    } else {
+      this.userService.save(this.user).subscribe(res => {
+        this.toastr.success('User is created successfully');
+        this.router.navigate(['usermanagement']);
+      });
+    }
+
   }
 }

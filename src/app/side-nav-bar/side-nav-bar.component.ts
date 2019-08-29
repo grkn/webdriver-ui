@@ -11,7 +11,6 @@ export class SideNavBarComponent implements OnInit {
 
   @Input() elementRef: any;
   model: MenuItem[] = [];
-  isLoggedIn = false;
 
   constructor(private authenticateService: AuthenticationService) {
     this.model.push({
@@ -29,24 +28,15 @@ export class SideNavBarComponent implements OnInit {
       ]
     });
 
-    if (authenticateService.currentUserValue) {
-      this.isLoggedIn = true;
-      authenticateService.currentUserValue.userAuthorization.forEach(auth => {
-        if ('ROLE_ADMIN' === auth.authorization) {
-          this.model.push({
-            label: 'User Management',
-            items: [
-              {label: 'List User', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement']},
-              {label: 'Add User', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'create']},
-              {label: 'List Role', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement', 'role']},
-              {label: 'Add Role', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'role', 'create']},
-              {label: 'User Authenticate', icon: 'pi pi-fw pi-cog', routerLink: ['usermanagement', 'role', 'addroletouser']}
-            ]
-          });
-          return;
-        }
-      });
-    }
+    this.model.push({
+      label: 'User Management',
+      items: [
+        {label: 'List User', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement']},
+        {label: 'Add User', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'create']},
+        {label: 'List Role', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement', 'role']},
+        {label: 'Add Role', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'role', 'create']}
+      ]
+    });
   }
 
   ngOnInit() {

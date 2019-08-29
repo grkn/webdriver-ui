@@ -1,1 +1,26 @@
-<p>role-management-list works!</p>
+<mat-card>
+
+  <mat-card-content>
+    <button mat-flat-button routerLink="/usermanagement/role/create" color="primary">Create Role</button>
+    <p-table dataKey="id" [value]="roles" [lazy]="true" (onLazyLoad)="loadRolesLazy($event)"
+             [paginator]="true"
+             [rows]="10" [totalRecords]="totalElements">
+      <ng-template pTemplate="header" let-columns="columns">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+        <tr>
+          <td>{{rowData.id}}</td>
+          <td>{{rowData.authorization}}</td>
+          <td>
+            <button mat-flat-button color="primary" (click)="deleteById(rowData.id)">Delete</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </mat-card-content>
+</mat-card>

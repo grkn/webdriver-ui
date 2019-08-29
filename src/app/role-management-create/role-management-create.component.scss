@@ -1,0 +1,17 @@
+.role-create mat-card-content{
+  text-align: center;
+}
+
+.role-create p-fieldset{
+  display: inline-flex;
+}
+
+.role-create mat-form-field {
+  min-width: 250px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.role-create button {
+  margin-left: 50px;
+}

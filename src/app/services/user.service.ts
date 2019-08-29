@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user';
-import {map} from 'rxjs/operators';
+import {map, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -22,14 +22,33 @@ export class UserService {
   }
 
   save(user: User) {
-    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/user`, {
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/user/`, {
       name: user.name,
       lastName: user.lastName,
       middleName: user.middleName,
       accountName: user.accountName,
-      accoutPhrase: user.accountPhrase,
-      emailAddress: user.emailAddress,
-      birthDay : user.birthDay
+      accountPhrase: user.accountPhrase,
+      emailAddress: user.emailAddress
     }).pipe(map(res => res));
+  }
+
+  findById(id: string) {
+    return this.httpClient.get<User>(`${environment.apiUrl}/tanistan/user/${id}`).pipe(map(res => res));
+  }
+
+  edit(user: User) {
+    return this.httpClient.patch<User>(`${environment.apiUrl}/tanistan/user/${user.id}`, {
+      name: user.name,
+      lastName: user.lastName,
+      middleName: user.middleName,
+      accountName: user.accountName,
+      accountPhrase: user.accountPhrase,
+      emailAddress: user.emailAddress
+    }).pipe(map(res => res));
+  }
+
+  addRoleToUser(id: any, role: any) {
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/user/${id}`,
+      {authorizations: [role.authorization]}).pipe(map(res => res));
   }
 }
