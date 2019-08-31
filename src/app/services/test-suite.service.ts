@@ -49,7 +49,7 @@ export class TestSuiteService {
       }));
   }
 
-  runTests(id: any) {
+  runTests(id: any, userId: any) {
     return this.httpClient.patch<any>(`${environment.apiUrl}/tanistan/testsuite/${id}/testcase/run`,
       {}).pipe(map(item => {
       return item;

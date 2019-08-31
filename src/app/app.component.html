@@ -1,7 +1,7 @@
-<div  class="container" style="align-self: center;align-content: center" gdAreas.xs="header | sidebar | content | footer" gdGap="1em"
+<div class="container" style="align-self: center;align-content: center" gdAreas.xs="header | sidebar | content | footer"
+     gdGap="1em"
      gdColumns.xs="none"
-     gdAreas.sm="header header | sidebar content | footer footer"
-     gdColumns.sm="20%!"
+     gdAreas.sm="header header header | sidebar content  content | footer footer footer"
      gdAreas.gt-sm="header header header | sidebar content content| footer footer footer"
      gdColumns.gt-sm="250px auto 120px" gdGap.gt-sm="20px" [ngStyle]="{'max-width': 'auto'}"
      [ngStyle.gt-sm]="{'max-width': 'auto'}">
@@ -9,13 +9,31 @@
 
   <div class="site_header" gdArea="header">
     <mat-card>
-      <mat-card-title>Test Automation</mat-card-title>
+      <mat-card-title>
+        <div>Test Automation  <a mat-button (click)="logout()" style="float:right">Logout</a></div>
+
+      </mat-card-title>
+      <mat-card-content>
+        <span style="float:right">{{user && user.name ? 'Welcome ' + user.name : 'Welcome Guest'}}</span>
+      </mat-card-content>
     </mat-card>
   </div>
 
   <div gdArea="sidebar" class="side_bar">
-    <div>
-      <app-side-nav-bar></app-side-nav-bar>
+    <div *ngIf="hideExplanation">
+      <app-side-nav-bar (toggleSideBar)="toggle($event)"></app-side-nav-bar>
+    </div>
+    <div *ngIf="!hideExplanation">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Explanation about project</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          This product resolves the issues between selenium and tester.
+          For example all testers does not need to know how to write code and test it.
+          ...
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 
@@ -25,15 +43,15 @@
 
 
   <!-- Site footer -->
-  <footer gdArea="footer" class="site-footer" >
+  <footer gdArea="footer" class="site-footer">
     <div fxFlex="row">
-      <div >
+      <div>
         <h6>About</h6>
         <p class="text-justify">Test Automation is an initiative to help the upcoming
           programmers with the test. </p>
       </div>
 
-      <div >
+      <div>
         <h6>Quick Links</h6>
         <ul class="footer-links">
           <li><a href="#">About Us</a></li>

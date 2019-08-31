@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user';
-import {map, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 
 @Injectable({

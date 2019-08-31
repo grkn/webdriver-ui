@@ -1,21 +1,137 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;background: linear-gradient(white, #D3D8E8)  }
-
-.ui-picklist-buttons-cell{
-  display:none !important;
+html, body {
+  height: 100%;
 }
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(white, #D3D8E8)
+}
+
+.ui-picklist-buttons-cell {
+  display: none !important;
+}
+
 .ui-slidemenu {
   width: 17em !important;
 }
-
 
 .mat-tab-labels .mat-tab-label-content {
   color: #ffffff;
 }
 
-.main_content > *{
-  background-color: #ffffff ;
+button .btnColor {
+  color: white;
+}
+
+button[mat-flat-button=''] {
+  margin: 10px;
+}
+
+button[mat-flat-button=''], .ui-picklist-caption, table th {
+  background-color: #33a9cc !important;
+  color: #ffffff !important;
+}
+
+mat-card {
+  background-color: #e6eee6 !important;
+}
+
+mat-card-content {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+td, span, label, div, a {
+  color: #33353d !important;
+}
+
+button[mat-flat-button=''] span {
+  color: #ffffff !important;
+}
+
+.ui-paginator-pages a {
+  color: #ffffff !important;
+}
+
+.ui-slidemenu {
+  background-color: #e6eee6 !important;
+}
+
+.ui-menuitem, .ui-state-highlight {
+  background-color: #e6eee6 !important;
+}
+
+body .ui-menu .ui-menuitem-link:hover,
+body .ui-menubar .ui-menuitem-link:hover,
+body .ui-tieredmenu .ui-menuitem-link:hover,
+body .ui-contextmenu .ui-menuitem-link:hover,
+body .ui-megamenu .ui-menuitem-link:hover,
+body .ui-slidemenu .ui-menuitem-link:hover {
+  background-color: #ffffff !important;
+}
+
+.ui-fieldset-legend {
+  background-color: white;
+}
+
+mat-form-field {
+  background-color: #ffffff;
+  width: 100%;
+}
+
+@media screen and (max-width: 960px) and (min-width: 600px) {
+  button[mat-flat-button=''] {
+    width: 100% !important;
+    span {
+      display: block;
+      width: 100% !important;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  app-root > div {
+    width: 100% !important;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+
+  .ui-slidemenu {
+    width: 100% !important;
+    height: auto;
+  }
+
+  .ui-slidemenu ul {
+    display: inline-flex;
+    width: 100% !important;
+  }
+
+  .ui-submenu-list {
+    display: inline-flex !important;
+    width: 100% !important;
+  }
+
+  .ui-slidemenu .ui-menuitem-link .ui-submenu-icon {
+    position: static;
+  }
+  body .pi {
+    font-size: initial
+  }
+
+  .ui-slidemenu-wrapper {
+    height: 100px !important;
+  }
+  .ui-slidemenu-content {
+    height: 100px !important;
+  }
+
+  mat-card-content {
+    display: inline !important;
+  }
 }

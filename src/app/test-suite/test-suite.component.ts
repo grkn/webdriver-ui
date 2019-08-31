@@ -67,7 +67,7 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   private fillTreeNode(tree: any) {
     if (tree) {
       tree.data = {id: tree.id, name: tree.name, testCases: tree.testCases};
-      tree.expandable = false;
+      tree.expanded = false;
       if (tree.children) {
         tree.children.forEach(treeChild => {
           this.fillTreeNode(treeChild);
@@ -91,9 +91,22 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     }
   }
 
+  private expandAll(tree: any) {
+    if (tree) {
+      tree.expanded = true;
+      if (tree.children) {
+        tree.children.forEach(treeChild => {
+          this.fillTreeNode(treeChild);
+        });
+      }
+    }
+  }
+
   selectedNode(rowNode) {
     this.selectedTestSuiteId = rowNode.node;
     this.selectedTestCaseId = undefined;
+    this.source = [];
+    this.target = [];
     this.manipulateService.findAllTest(this.authService.currentUserValue.id, 0, 2000).subscribe(source => {
 
       this.testSuiteService.findTestBySuiteIdAndUserId(this.authService.currentUserValue.id, this.selectedTestSuiteId.id)
@@ -162,7 +175,7 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   runTestSuite(rowNode) {
     this.selectedTestSuiteId = rowNode.node;
 
-    this.testSuiteService.runTests(this.selectedTestSuiteId.id).subscribe(res => {
+    this.testSuiteService.runTests(this.selectedTestSuiteId.id, this.authService.currentUserValue.id).subscribe(res => {
     });
   }
 
@@ -215,5 +228,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clearAll();
+  }
+
+  filterTree(suites, value: any) {
+    suites.filterGlobal(value, 'contains');
   }
 }

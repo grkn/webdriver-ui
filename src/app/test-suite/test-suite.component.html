@@ -1,4 +1,4 @@
-<mat-card fxFlex="row">
+<mat-card >
   <mat-card-content fxLayoutGap="20px">
 
     <mat-form-field>
@@ -6,10 +6,16 @@
     </mat-form-field>
     <button mat-flat-button color="primary" (click)="addTestSuite(suites)">New Suite</button>
 
-    <p-treeTable #suites [value]="treeNodes">
+    <p-treeTable [globalFilterFields]="['name']" #suites [value]="treeNodes">
+      <ng-template pTemplate="caption">
+        <div style="text-align: right">
+          <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="50" placeholder="Global Filter" (input)="filterTree(suites,$event.target.value)" style="width:auto">
+        </div>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 50px">Selection</th>
+          <th style="width: 50px"></th>
           <th>Name</th>
           <th>Actions</th>
         </tr>
@@ -56,7 +62,7 @@
   </mat-card-content>
 
 </mat-card>
-<mat-card fxFlex="row" *ngIf="selectedTestSuiteId">
+<mat-card *ngIf="selectedTestSuiteId">
   <mat-card-content fxLayoutGap="20px">
     <button  mat-flat-button color="primary" (click)="clearAll()">Clear All Listenings </button>
     <br/>
@@ -98,10 +104,16 @@
         </tr>
       </ng-template>
     </p-table>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
 
     <p-table *ngIf="selectedTestCaseId" dataKey="id" [value]="runningInstances" [lazy]="true" (onLazyLoad)="loadRunningInstanceLazy($event)"
              [paginator]="true"
              [rows]="10" [totalRecords]="totalRecords">
+
       <ng-template pTemplate="header" let-columns="columns">
         <tr>
           <th style="width: 3em"></th>
@@ -157,7 +169,6 @@
         </tr>
       </ng-template>
     </p-table>
-
   </mat-card-content>
-</mat-card>
 
+</mat-card>

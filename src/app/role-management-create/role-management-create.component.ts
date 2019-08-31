@@ -33,11 +33,6 @@ export class RoleManagementCreateComponent implements OnInit {
   }
 
   removeRole(role: any) {
-    this.roles = this.roles.filter(el => el.name !== role.name);
+    this.roles = this.roles.filter(el => el !== role);
   }
-
-  deleteRole(id: string) {
-    this.roleService.delete(id).subscribe();
-  }
-
 }
