@@ -48,7 +48,9 @@ export class ManipulateServiceService {
   }
 
   saveTest(userId: string, testCommands: ElementAction[], name: string, id: string) {
-    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/user/${userId}`, {testCommands, name, id})
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null ;
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/user/${userId}`, {testCommands, name, id})
       .pipe(map(item => {
         if (id) {
           this.toastr.success('You have successfully edited test case.');
@@ -60,21 +62,27 @@ export class ManipulateServiceService {
   }
 
   findAllTest(userId: string, page: number, size: number) {
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/user/${userId}/all?page=${page}&size=${size}`)
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null ;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/user/${userId}/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
       }));
   }
 
   getRunningInstances(testCaseId: string, page: number, size: number) {
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/${testCaseId}/instancerunner/all?page=${page}&size=${size}`)
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null ;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/${testCaseId}/instancerunner/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
       }));
   }
 
   findTestById(testId: string) {
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/${testId}`)
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null ;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/${testId}`)
       .pipe(map(item => {
         return item;
       }));

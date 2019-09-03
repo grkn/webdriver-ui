@@ -13,21 +13,27 @@ export class TestSuiteService {
   }
 
   findRoot() {
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/root`)
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/root`)
       .pipe(map(item => {
         return item;
       }));
   }
 
   addTestCaseTotestSuite(suiteId: string, testId: Array<string>) {
-    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/testsuite/${suiteId}/addtest`, testId)
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${suiteId}/addtest`, testId)
       .pipe(map(item => {
         return item;
       }));
   }
 
   createTestSuite(parentId: any, name: string) {
-    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/testsuite`, {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}`, {
       parentId,
       name,
       testCase: []
@@ -37,20 +43,27 @@ export class TestSuiteService {
   }
 
   findTestBySuiteIdAndUserId(userId: string, suiteId: string) {
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/${suiteId}/testcases/user/${userId}`).pipe(map(item => {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${suiteId}/testcases/user/${userId}`)
+      .pipe(map(item => {
       return item;
     }));
   }
 
   removeTestCaseFromTestSuite(suiteId: string, testId: string) {
-    return this.httpClient.delete<any>(`${environment.apiUrl}/tanistan/testsuite/${suiteId}/testcase/${testId}`)
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.delete<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${suiteId}/testcase/${testId}`)
       .pipe(map(item => {
         return item;
       }));
   }
 
   runTests(id: any, userId: any) {
-    return this.httpClient.patch<any>(`${environment.apiUrl}/tanistan/testsuite/${id}/testcase/run`,
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.patch<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${id}/testcase/run`,
       {}).pipe(map(item => {
       return item;
     }));

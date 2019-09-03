@@ -3,6 +3,7 @@ import {User} from '../models/user';
 import {UserService} from '../services/user.service';
 import {ToastrService} from 'ngx-toastr';
 import {ActivatedRoute, Router} from '@angular/router';
+import {AuthenticationService} from '../services/authenticate';
 
 @Component({
   selector: 'app-user-management-create',
@@ -21,10 +22,13 @@ export class UserManagementCreateComponent implements OnInit {
     middleName: '',
     name: '',
     userAuthorization: [],
-    birthDay: new Date()
+    birthDay: new Date(),
+    project: undefined,
+    companyId: '',
+    companyName: ''
   };
 
-  constructor(private userService: UserService, private toastr: ToastrService,
+  constructor(private userService: UserService, private toastr: ToastrService, private authService: AuthenticationService,
               private router: Router, private activeRoute: ActivatedRoute) {
     activeRoute.data.subscribe(item => {
       if (item && item.editResolver) {
@@ -37,13 +41,13 @@ export class UserManagementCreateComponent implements OnInit {
   }
 
   saveUser() {
-    if(this.user.id) {
+    if (this.user.id) {
       this.userService.edit(this.user).subscribe(res => {
         this.toastr.success('User is edited successfully');
         this.router.navigate(['usermanagement']);
       });
     } else {
-      this.userService.save(this.user).subscribe(res => {
+      this.userService.save(this.user, this.authService.currentUserValue.companyId).subscribe(res => {
         this.toastr.success('User is created successfully');
         this.router.navigate(['usermanagement']);
       });

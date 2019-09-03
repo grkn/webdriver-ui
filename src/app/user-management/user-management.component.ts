@@ -3,6 +3,7 @@ import {User} from '../models/user';
 import {UserService} from '../services/user.service';
 import {DialogService} from 'primeng/api';
 import {AddRoleToUserComponent} from '../add-role-to-user/add-role-to-user.component';
+import {AuthenticationService} from '../services/authenticate';
 
 @Component({
   selector: 'app-user-management',
@@ -14,7 +15,7 @@ export class UserManagementComponent implements OnInit {
   totalElements: number;
   event: any;
 
-  constructor(private userService: UserService, private dialogService: DialogService) {
+  constructor(private userService: UserService, private authenticateService: AuthenticationService, private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -24,7 +25,7 @@ export class UserManagementComponent implements OnInit {
     this.event = $event;
     const page = parseInt($event.first) / parseInt($event.rows);
     const size = parseInt($event.rows);
-    this.userService.findAllUsers(page, size).subscribe(res => {
+    this.userService.findAllUsersByCompany(this.authenticateService.currentUserValue.companyId, page, size).subscribe(res => {
       this.users = res.content;
       this.totalElements = res.totalElements;
     });

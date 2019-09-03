@@ -6,10 +6,6 @@
       </mat-form-field>
       <br>
       <mat-form-field>
-        <input matInput placeholder="Account Name" [(ngModel)]="user.accountName"/>
-      </mat-form-field>
-      <br>
-      <mat-form-field>
         <input matInput type="password" placeholder="Password" [(ngModel)]="user.accountPhrase"/>
       </mat-form-field>
       <br>
@@ -19,10 +15,6 @@
       <br>
       <mat-form-field>
         <input matInput placeholder="Last Name" [(ngModel)]="user.lastName"/>
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput placeholder="MiddleName" [(ngModel)]="user.middleName"/>
       </mat-form-field>
       <br>
       <button mat-flat-button color="primary" (click)="saveUser()">Save</button>

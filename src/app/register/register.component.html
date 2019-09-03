@@ -1,0 +1,32 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-content>
+      <p-fieldset legend="Sign Up">
+        <div class="example-form">
+          <mat-form-field>
+            <input matInput placeholder="Email" [(ngModel)]="user.emailAddress"/>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput type="password" placeholder="Password" [(ngModel)]="user.accountPhrase"/>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Name" [(ngModel)]="user.name"/>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Last Name" [(ngModel)]="user.lastName"/>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <input matInput placeholder="Company" [(ngModel)]="user.companyName"/>
+          </mat-form-field>
+          <br>
+          <button mat-flat-button color="primary" (click)="register()">Sign Up</button>
+
+        </div>
+      </p-fieldset>
+    </mat-card-content>
+  </mat-card>
+</div>

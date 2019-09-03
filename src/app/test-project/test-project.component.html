@@ -1,0 +1,44 @@
+<mat-card>
+
+  <mat-card-content>
+    <p-fieldset legend="Project List">
+    <button mat-flat-button routerLink="/testproject/create" color="primary">Create Project</button>
+    <p-table [(selection)]="selectedProject" (selectionChange)="show($event.id)" dataKey="id" [value]="projects" [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header" let-columns="columns">
+        <tr>
+          <th style="width: 3em"></th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+        <tr>
+          <td>
+            <p-tableRadioButton [value]="rowData"></p-tableRadioButton>
+          </td>
+          <td>{{rowData.id}}</td>
+          <td>{{rowData.name}}</td>
+          <td>
+            <button mat-flat-button color="primary" routerLink="/testproject/create/{{rowData.id}}">Edit</button>
+            <button mat-flat-button color="primary" (click)="show(rowData.id)">Show Users</button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-fieldset *ngIf="selectedProjectId" legend="User Selection">
+      <p-pickList (onMoveToTarget)="addUserToProject($event)"
+                  (onMoveToSource)="removeUserToProject($event)"
+                  [source]="source" [target]="userList" [responsive]="true" filterBy="emailAddress"
+                  dragdrop="true" sourceFilterPlaceholder="Search by name" sourceHeader="Available Users"
+                  targetHeader="Selected Users" targetFilterPlaceholder="Search by name">
+        <ng-template let-user pTemplate="item">
+          <div class="ui-helper-clearfix">
+            <div>{{user.emailAddress || user.accountName}}</div>
+          </div>
+        </ng-template>
+      </p-pickList>
+    </p-fieldset>
+    </p-fieldset>
+  </mat-card-content>
+</mat-card>

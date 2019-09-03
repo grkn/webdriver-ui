@@ -2,7 +2,8 @@ const PROXY_CONFIG = [
   {
     context: [
       '/tanistan/**',
-      '/oauth/**'
+      '/oauth/**',
+      '/register/**'
     ],
     target: "http://localhost:8082",
     secure: false

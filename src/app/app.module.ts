@@ -34,6 +34,11 @@ import {FieldsetModule} from 'primeng/fieldset';
 import {UserManagementEditResolverService} from './resolvers/user-management-edit-resolver.service';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {DialogService} from 'primeng/api';
+import {TestProjectComponent} from './test-project/test-project.component';
+import {TestProjectCreateComponent} from './test-project-create/test-project-create.component';
+import {OrderListModule} from 'primeng/orderlist';
+import {TestProjectResolverService} from './resolvers/test-project-resolver.service';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +53,9 @@ import {DialogService} from 'primeng/api';
     RoleManagementListComponent,
     RoleManagementCreateComponent,
     AddRoleToUserComponent,
+    TestProjectComponent,
+    TestProjectCreateComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,12 +76,13 @@ import {DialogService} from 'primeng/api';
     OverlayPanelModule,
     SlideMenuModule,
     FieldsetModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    OrderListModule
   ],
   entryComponents: [ReceiveMessageComponent, AddRoleToUserComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-    , LoginResolverService, ManipulateDriverFetchResolverService,
+    , LoginResolverService, ManipulateDriverFetchResolverService, TestProjectResolverService,
     TestSuiteFetchResolver, TestCaseTypeResolverService, UserManagementEditResolverService, DialogService],
   bootstrap: [AppComponent]
 })

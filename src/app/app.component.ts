@@ -1,21 +1,26 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from './services/authenticate';
 import {SideNavBarComponent} from './side-nav-bar/side-nav-bar.component';
 import {User} from './models/user';
+import {TestProjectService} from './services/test-project.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit, OnInit {
 
   hideExplanation: boolean = false;
+  projects: any = [];
   user: User;
   @ViewChild(SideNavBarComponent, {static: false})
   sideNavBar: SideNavBarComponent;
+  @ViewChild('projectId', {static: true})
+  projectId: any;
+  selectedProject: any = {};
 
-  constructor(private authenticateService: AuthenticationService) {
+  constructor(private authenticateService: AuthenticationService, private testProjectService: TestProjectService) {
     this.authenticateService.user.subscribe(user => {
       if (user && user.id) {
         this.hideExplanation = true;
@@ -24,6 +29,13 @@ export class AppComponent {
       }
       this.user = user;
     });
+
+
+    this.authenticateService.projects.subscribe(createProject => {
+      if (createProject) {
+        this.projects.push(createProject);
+      }
+    });
   }
 
   logout() {
@@ -31,5 +43,21 @@ export class AppComponent {
     if (this.sideNavBar) {
       this.sideNavBar.disableMenu();
     }
+  }
+
+  selectProject($event) {
+    this.authenticateService.setProject($event.value);
+    window.location.reload();
+  }
+
+  ngAfterViewInit(): void {
+    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    if (this.selectedProject) {
+      this.projectId._placeholder = this.selectedProject.name;
+    }
+  }
+
+  ngOnInit(): void {
+    this.testProjectService.findAll(this.authenticateService.currentUserValue.id).subscribe(res => this.projects = res);
   }
 }

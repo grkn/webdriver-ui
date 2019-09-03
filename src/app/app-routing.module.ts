@@ -9,10 +9,13 @@ import {TestSuiteFetchResolver} from './resolvers/test-suite-fetch-resolver.serv
 import {TestCaseTypeResolverService} from './resolvers/test-case-type-resolver.service';
 import {RoleManagementListComponent} from './role-management-list/role-management-list.component';
 import {UserManagementCreateComponent} from './user-management-create/user-management-create.component';
-import {AddRoleToUserComponent} from './add-role-to-user/add-role-to-user.component';
 import {UserManagementComponent} from './user-management/user-management.component';
 import {RoleManagementCreateComponent} from './role-management-create/role-management-create.component';
 import {UserManagementEditResolverService} from './resolvers/user-management-edit-resolver.service';
+import {TestProjectComponent} from './test-project/test-project.component';
+import {TestProjectCreateComponent} from './test-project-create/test-project-create.component';
+import {TestProjectResolverService} from './resolvers/test-project-resolver.service';
+import {RegisterComponent} from './register/register.component';
 
 const routes: Routes = [
   {
@@ -40,26 +43,55 @@ const routes: Routes = [
   {
     path: 'usermanagement/create',
     component: UserManagementCreateComponent,
-    resolve : {
+    resolve: {
       loginResolver: LoginResolverService
     }
   },
   {
     path: 'usermanagement/create/:id',
     component: UserManagementCreateComponent,
-    resolve : {
+    resolve: {
       loginResolver: LoginResolverService,
       editResolver: UserManagementEditResolverService
     }
   },
   {
     path: 'usermanagement/role',
-    component: RoleManagementListComponent
+    component: RoleManagementListComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
   },
   {
     path: 'usermanagement/role/create',
-    component: RoleManagementCreateComponent
+    component: RoleManagementCreateComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
   },
+  {
+    path: 'testproject',
+    component: TestProjectComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: 'testproject/create',
+    component: TestProjectCreateComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: 'testproject/create/:id',
+    component: TestProjectCreateComponent,
+    resolve: {
+      loginResolver: LoginResolverService,
+      testProjectResolver: TestProjectResolverService
+    }
+  },
+  {path: 'register', component: RegisterComponent},
   {path: '**', component: LoginComponent}
 ];
 

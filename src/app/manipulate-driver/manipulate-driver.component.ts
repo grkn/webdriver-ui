@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ManipulateServiceService} from '../services/manipulate-service.service';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {AuthenticationService} from '../services/authenticate';
@@ -11,7 +11,7 @@ import {ElementAction} from '../models/element-action';
   templateUrl: './manipulate-driver.component.html',
   styleUrls: ['./manipulate-driver.component.scss']
 })
-export class ManipulateDriverComponent implements OnInit, OnDestroy {
+export class ManipulateDriverComponent implements OnInit {
   testCommands: ElementAction[] = [];
   selectionValue: string;
   selectionType: string;
@@ -26,7 +26,7 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
   testCaseName: string;
 
 
-  constructor(private manipulateservice: ManipulateServiceService,private router: Router,
+  constructor(private manipulateservice: ManipulateServiceService, private router: Router,
               private authenticationService: AuthenticationService, private route: ActivatedRoute) {
     this.testDataSource.paginator = this.paginator;
     this.route.data.subscribe(item => {
@@ -65,12 +65,8 @@ export class ManipulateDriverComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.manipulateservice.killSession(this.sessionId).subscribe();
-  }
-
   removeRow(element) {
-    this.testCommands  = this.testCommands.filter(el => el !== element);
+    this.testCommands = this.testCommands.filter(el => el !== element);
   }
 
   async runTest() {

@@ -9,4 +9,7 @@ export class User {
   userAuthorization: any;
   middleName: string;
   birthDay: Date;
+  project: any;
+  companyName: string;
+  companyId: string;
 }

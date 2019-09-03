@@ -10,10 +10,16 @@
   <div class="site_header" gdArea="header">
     <mat-card>
       <mat-card-title>
-        <div>Test Automation  <a mat-button (click)="logout()" style="float:right">Logout</a></div>
-
+        <div>Test Automation
+          <a mat-button (click)="logout()" style="float:right">Logout</a>
+        </div>
       </mat-card-title>
       <mat-card-content>
+        <mat-select #projectId style="width: 200px" (selectionChange)="selectProject($event)" placeholder="Projects">
+          <mat-option [value]="{id: project.id, name: project.name}" *ngFor="let project of projects">
+            {{project.name}}
+          </mat-option>
+        </mat-select>
         <span style="float:right">{{user && user.name ? 'Welcome ' + user.name : 'Welcome Guest'}}</span>
       </mat-card-content>
     </mat-card>

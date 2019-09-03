@@ -45,15 +45,28 @@ export class SideNavBarComponent implements OnInit {
         ]
       });
 
-      this.model.push({
-        label: 'User Management',
-        items: [
-          {label: 'List User', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement']},
-          {label: 'Add User', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'create']},
-          {label: 'List Role', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement', 'role']},
-          {label: 'Add Role', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'role', 'create']}
-        ]
-      });
+      if (this.authenticateService.currentUserValue.userAuthorization
+          .filter(auth => auth.authorization.indexOf('ROLE_ADMIN') === 0).length > 0
+        || this.authenticateService.currentUserValue.userAuthorization
+          .filter(auth => auth.authorization.indexOf('ROLE_ROOT') === 0).length > 0) {
+        this.model.push({
+          label: 'User Management',
+          items: [
+            {label: 'List User', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement']},
+            {label: 'Add User', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'create']},
+            {label: 'List Role', icon: 'pi pi-fw pi-list', routerLink: ['usermanagement', 'role']},
+            {label: 'Add Role', icon: 'pi pi-fw pi-plus', routerLink: ['usermanagement', 'role', 'create']}
+          ]
+        });
+
+        this.model.push({
+          label: 'Test Project',
+          items: [
+            {label: 'List Project', icon: 'pi pi-fw pi-list', routerLink: ['testproject']},
+            {label: 'Create Project', icon: 'pi pi-fw pi-plus', routerLink: ['testproject', 'create']},
+          ]
+        });
+      }
     }
   }
 }
