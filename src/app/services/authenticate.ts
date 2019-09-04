@@ -48,12 +48,8 @@ export class AuthenticationService {
     this.projectsSubject.next(project);
   }
 
-  public get projectValue(): User {
+  public get projectValue(): any {
     return this.projectsSubject.value;
-  }
-
-  public get currentProject(): Observable<any> {
-    return this.currentProject;
   }
 
   public get projects(): Observable<any> {

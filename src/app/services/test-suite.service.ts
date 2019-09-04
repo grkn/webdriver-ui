@@ -68,4 +68,13 @@ export class TestSuiteService {
       return item;
     }));
   }
+
+  getTestSuiteCount() {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null ;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/dashboard/project/${projectId}/testsuitecount`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
 }

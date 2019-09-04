@@ -40,6 +40,8 @@ export class AppComponent implements AfterViewInit, OnInit {
 
   logout() {
     this.authenticateService.logout();
+    this.projectId.placeholder = 'Select Project';
+    this.projectId.value = undefined;
     if (this.sideNavBar) {
       this.sideNavBar.disableMenu();
     }
@@ -53,11 +55,15 @@ export class AppComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     if (this.selectedProject) {
-      this.projectId._placeholder = this.selectedProject.name;
+      this.projectId.placeholder = this.selectedProject.name;
+    } else {
+      this.projectId.placeholder = 'Select Project';
     }
   }
 
   ngOnInit(): void {
-    this.testProjectService.findAll(this.authenticateService.currentUserValue.id).subscribe(res => this.projects = res);
+    if (this.authenticateService.currentUserValue && this.authenticateService.currentUserValue.id) {
+      this.testProjectService.findAll(this.authenticateService.currentUserValue.id).subscribe(res => this.projects = res);
+    }
   }
 }

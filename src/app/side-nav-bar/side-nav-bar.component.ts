@@ -31,6 +31,11 @@ export class SideNavBarComponent implements OnInit {
     if (this.authenticateService.currentUserValue) {
       this.model = [];
       this.model.push({
+        label: 'Dashboard',
+        routerLink: ['dashboard']
+      });
+
+      this.model.push({
         label: 'Test Cases',
         items: [
           {label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['testcases']},
@@ -49,6 +54,7 @@ export class SideNavBarComponent implements OnInit {
           .filter(auth => auth.authorization.indexOf('ROLE_ADMIN') === 0).length > 0
         || this.authenticateService.currentUserValue.userAuthorization
           .filter(auth => auth.authorization.indexOf('ROLE_ROOT') === 0).length > 0) {
+
         this.model.push({
           label: 'User Management',
           items: [

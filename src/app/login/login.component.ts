@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([redirectUrl]);
         } else {
 
-          window.location.href = 'http://localhost:4200/testcases';
+          this.router.navigate(['dashboard']);
         }
       });
     });

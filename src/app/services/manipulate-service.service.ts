@@ -88,4 +88,12 @@ export class ManipulateServiceService {
       }));
   }
 
+  getTestCaseCount() {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null ;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/dashboard/project/${projectId}/testcasecount`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
 }
