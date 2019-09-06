@@ -17,6 +17,7 @@ import {TestProjectCreateComponent} from './test-project-create/test-project-cre
 import {TestProjectResolverService} from './resolvers/test-project-resolver.service';
 import {RegisterComponent} from './register/register.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
+import {DriverComponent} from './driver/driver.component';
 
 const routes: Routes = [
   {
@@ -100,7 +101,22 @@ const routes: Routes = [
     resolve: {
       loginResolver: LoginResolverService
     }
+  },
+  {
+    path: 'driver',
+    component: DriverComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: '**',
+    component: DashboardComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
   }
+
 ];
 
 @NgModule({

@@ -50,6 +50,10 @@ export class SideNavBarComponent implements OnInit {
         ]
       });
 
+      this.model.push({
+        label: 'Driver',
+        routerLink: ['driver']
+      });
       if (this.authenticateService.currentUserValue.userAuthorization
           .filter(auth => auth.authorization.indexOf('ROLE_ADMIN') === 0).length > 0
         || this.authenticateService.currentUserValue.userAuthorization

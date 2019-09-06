@@ -40,6 +40,7 @@ import {OrderListModule} from 'primeng/orderlist';
 import {TestProjectResolverService} from './resolvers/test-project-resolver.service';
 import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DriverComponent } from './driver/driver.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     TestProjectCreateComponent,
     RegisterComponent,
     DashboardComponent,
+    DriverComponent,
   ],
   imports: [
     BrowserModule,
