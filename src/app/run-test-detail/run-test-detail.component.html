@@ -34,14 +34,16 @@
       </mat-form-field>
       <div style="width: 50%;padding-top: 20px ">
       <span style="margin-left: 10px"
-            [class]="steps[i].status === 0 ? 'greenColor' : 'redColor'">{{steps[i].result ? steps[i].result.value : 'Not Set'}}
+            [class]="steps[i].status === 0 ? 'greenColor' : 'redColor'">
+        {{steps[i].status === 0 || steps[i].result ? 'SUCCESS' : 'FAILED'}}
       </span>
-        <span style="margin-left: 10px">{{steps[i].executionTime}} ms
+        <span style="margin-left: 10px" *ngIf="steps[i].executionTime">{{steps[i].executionTime}} ms
       </span>
       </div>
     </mat-card-content>
     <div>
-    <button matTooltip="Result will be ignored" mat-flat-button color="primary" (click)="runTest()">Run Test Again</button>
+      <button matTooltip="Result will be ignored" mat-flat-button color="primary" (click)="runTest()">Run Test Again
+      </button>
     </div>
   </mat-card>
 </p-fieldset>

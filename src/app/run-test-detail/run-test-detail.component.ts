@@ -28,22 +28,25 @@ export class RunTestDetailComponent implements OnInit {
 
   async runTest() {
     this.sessionId = (await this.testCaseService.getSession()).sessionId;
+    this.steps = [];
     for (let i = 0; i < this.testCommands.length; i++) {
       const command: any = this.testCommands[i];
-
 
       if (command.type === 'click') {
         command.selectedElementId = (await
           this.testCaseService.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
         command.result = (await this.testCaseService.clickElement(this.sessionId, command.selectedElementId));
+        this.steps.push(command.result);
 
       } else if (command.type === 'sendKey') {
         command.selectedElementId = (await
           this.testCaseService.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
         command.result = (await this.testCaseService.sendKeysElement(this.sessionId, command.selectedElementId, command.message));
+        this.steps.push(command.result);
 
       } else if (command.type === 'goToUrl') {
         command.result = (await this.testCaseService.navigateToUrl(command.navigateUrl, this.sessionId));
+        this.steps.push(command.result);
       }
 
       if (command.result.status !== 0) {
