@@ -28,12 +28,14 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.testcaseCount = this.manipulateService.getTestCaseCount();
-    this.testcaseCount.subscribe(res => this.testCaseCountPieChart = res);
     this.testSuiteCount = this.testsuiteService.getTestSuiteCount();
     this.testSuiteCount.subscribe(res => {
       this.testSuiteCountPieChart = res;
-      const mockChart = document.getElementById('mockChart');
-      window['mockChart'](mockChart, this.testSuiteCountPieChart, this.testCaseCountPieChart);
+      this.testcaseCount.subscribe(testCaseCount => {
+        this.testCaseCountPieChart = testCaseCount;
+        const mockChart = document.getElementById('mockChart');
+        window['mockChart'](mockChart, this.testSuiteCountPieChart, this.testCaseCountPieChart);
+      });
     });
 
     this.testCaseInterval();
@@ -52,7 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     const clearId = setInterval(() => {
       const mockChart = document.getElementById('mockChart');
       window['mockChart'](mockChart, this.testSuiteCountPieChart, this.testCaseCountPieChart);
-    }, 20000);
+    }, 15000);
     this.clearIds.push(clearId);
   }
 

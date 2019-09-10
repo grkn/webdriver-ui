@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {TestCaseService} from '../services/test-case.service';
-import {MatTableDataSource} from '@angular/material';
-import {del} from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-runned-test-suites',
@@ -23,9 +21,11 @@ export class RunTestSuitesComponent implements OnInit {
   }
 
   existsFail(steps: any[]) {
-    for (const step of steps) {
-      if (step.status !== 0) {
-        return true;
+    if (steps) {
+      for (const step of steps) {
+        if (step.status !== 0) {
+          return true;
+        }
       }
     }
     return false;
