@@ -56,7 +56,7 @@ export class SideNavBarComponent implements OnInit {
       });
 
       this.model.push({
-        label: 'Report Test Suites',
+        label: 'Test Report',
         routerLink: ['testsuitesrun']
       });
 

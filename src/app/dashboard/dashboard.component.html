@@ -19,18 +19,11 @@
       <span># of Test Suites : {{testSuiteCount | async}}</span>
     </div>
     <div class="widget" *ngIf="isProjectSelected"
-         fxFlex="0 1 calc(25% - 32px)"
-         fxFlex.lt-md="0 1 calc(50% - 32px)"
+         fxFlex="0 1 calc(50% - 32px)"
+         fxFlex.lt-md="0 1 calc(100% - 32px)"
          fxFlex.lt-sm="100%"
     >
-      <span>This widget is EMPTY right now</span>
-    </div>
-    <div class="widget" *ngIf="isProjectSelected"
-         fxFlex="0 1 calc(25% - 32px)"
-         fxFlex.lt-md="0 1 calc(50% - 32px)"
-         fxFlex.lt-sm="100%"
-    >
-      <span>This widget is EMPTY right now</span>
+      <div id="mockChart"></div>
     </div>
     <div class="widget" *ngIf="!isProjectSelected"
          fxFlex="0 1 calc(100% - 32px)"
@@ -38,8 +31,8 @@
          fxFlex.lt-sm="100%"
     >
       <span style="color:red">
-        <p>There is not any defined project</p>
-        <button routerLink="/testproject/create" mat-flat-button color="primary">Create Product</button>
+        <p>There is not any defined project or selected project</p>
+        <button routerLink="/testproject/create" mat-flat-button color="primary">Create Project</button>
       </span>
     </div>
   </ng-container>

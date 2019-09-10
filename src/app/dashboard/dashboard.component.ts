@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../services/authenticate';
 import {TestCaseService} from '../services/test-case.service';
 import {TestSuiteService} from '../services/test-suite.service';
@@ -9,11 +9,14 @@ import {Observable} from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isProjectSelected = false;
   testcaseCount: Observable<any>;
   testSuiteCount: Observable<any>;
+  testCaseCountPieChart: number;
+  testSuiteCountPieChart: number;
+  clearIds: any[] = [];
 
   constructor(private authenticateService: AuthenticationService, private manipulateService: TestCaseService,
               private testsuiteService: TestSuiteService) {
@@ -25,9 +28,52 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.testcaseCount = this.manipulateService.getTestCaseCount();
+    this.testcaseCount.subscribe(res => this.testCaseCountPieChart = res);
     this.testSuiteCount = this.testsuiteService.getTestSuiteCount();
+    this.testSuiteCount.subscribe(res => {
+      this.testSuiteCountPieChart = res;
+      const mockChart = document.getElementById('mockChart');
+      window['mockChart'](mockChart, this.testSuiteCountPieChart, this.testCaseCountPieChart);
+    });
+
+    this.testCaseInterval();
+    this.testSuiteInterval();
+    this.mockChartInterval();
+
   }
 
+  ngOnDestroy(): void {
+    this.clearIds.forEach((item: any) => {
+      clearInterval(item);
+    });
+  }
 
+  mockChartInterval() {
+    const clearId = setInterval(() => {
+      const mockChart = document.getElementById('mockChart');
+      window['mockChart'](mockChart, this.testSuiteCountPieChart, this.testCaseCountPieChart);
+    }, 20000);
+    this.clearIds.push(clearId);
+  }
+
+  testCaseInterval() {
+    const clearId = setInterval(() => {
+      this.testcaseCount = this.manipulateService.getTestCaseCount();
+      this.testcaseCount.subscribe(res => this.testCaseCountPieChart = res);
+    }, 20000);
+    this.clearIds.push(clearId);
+  }
+
+  testSuiteInterval() {
+    const clearId = setInterval(() => {
+      this.testSuiteCount = this.testsuiteService.getTestSuiteCount();
+      this.testSuiteCount.subscribe(res => this.testSuiteCountPieChart = res);
+    }, 20000);
+    this.clearIds.push(clearId);
+  }
+
+  ngAfterViewInit(): void {
+
+  }
 
 }

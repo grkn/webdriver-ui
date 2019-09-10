@@ -28,6 +28,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.hideExplanation = false;
       }
       this.user = user;
+      this.findAllProjects();
     });
 
 
@@ -62,6 +63,10 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+    this.findAllProjects();
+  }
+
+  findAllProjects() {
     if (this.authenticateService.currentUserValue && this.authenticateService.currentUserValue.id) {
       this.testProjectService.findAll(this.authenticateService.currentUserValue.id).subscribe(res => this.projects = res);
     }
