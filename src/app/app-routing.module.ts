@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {ManipulateDriverComponent} from './manipulate-driver/manipulate-driver.component';
+import {TestCaseDriverComponent} from './test-case-driver/test-case-driver.component';
 import {LoginComponent} from './login/login.component';
 import {LoginResolverService} from './resolvers/login-resolver.service';
 import {ManipulateDriverFetchResolverService} from './resolvers/manipulate-driver-fetch-resolver.service';
@@ -18,16 +18,19 @@ import {TestProjectResolverService} from './resolvers/test-project-resolver.serv
 import {RegisterComponent} from './register/register.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {DriverComponent} from './driver/driver.component';
+import {RunTestSuitesComponent} from './runned-test-suites/run-test-suites.component';
+import {RunTestDetailComponent} from './run-test-detail/run-test-detail.component';
+import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
 
 const routes: Routes = [
   {
     path: 'testcases',
-    component: ManipulateDriverComponent,
+    component: TestCaseDriverComponent,
     resolve: {loginResolver: LoginResolverService, testCaseResolver: ManipulateDriverFetchResolverService}
   },
   {
     path: 'testcases/:type',
-    component: ManipulateDriverComponent,
+    component: TestCaseDriverComponent,
     resolve: {loginResolver: LoginResolverService, typeResolver: TestCaseTypeResolverService}
   },
   {
@@ -107,6 +110,21 @@ const routes: Routes = [
     component: DriverComponent,
     resolve: {
       loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: 'testsuitesrun',
+    component: RunTestSuitesComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: 'testsuitesrun/:id',
+    component: RunTestDetailComponent,
+    resolve: {
+      loginResolver: LoginResolverService,
+      runTestDetailResolver: RunTestDetailResolverService
     }
   },
   {

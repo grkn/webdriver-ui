@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../services/authenticate';
-import {ManipulateServiceService} from '../services/manipulate-service.service';
+import {TestCaseService} from '../services/test-case.service';
 import {TestSuiteService} from '../services/test-suite.service';
 import {Observable} from 'rxjs';
 
@@ -15,7 +15,7 @@ export class DashboardComponent implements OnInit {
   testcaseCount: Observable<any>;
   testSuiteCount: Observable<any>;
 
-  constructor(private authenticateService: AuthenticationService, private manipulateService: ManipulateServiceService,
+  constructor(private authenticateService: AuthenticationService, private manipulateService: TestCaseService,
               private testsuiteService: TestSuiteService) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     if (selectedProject) {

@@ -22,7 +22,7 @@ export class DriverComponent implements OnInit {
 
   getAll() {
     this.driverList = [];
-    this.driverService.findAll().subscribe(res => this.driverList = res);
+    this.driverService.findAll(this.authenticationService.currentUserValue.id).subscribe(res => this.driverList = res);
   }
 
   saveDriver() {
@@ -31,7 +31,7 @@ export class DriverComponent implements OnInit {
       this.driverService.updateDriver(this.driver, this.driver.id, userId).subscribe(rest => {
         if (rest) {
           this.toastr.success('Driver is successfully edited.');
-          this.getAll()
+          this.getAll();
         }
       });
     } else {

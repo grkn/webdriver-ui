@@ -47,8 +47,8 @@ export class TestSuiteService {
     const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${suiteId}/testcases/user/${userId}`)
       .pipe(map(item => {
-      return item;
-    }));
+        return item;
+      }));
   }
 
   removeTestCaseFromTestSuite(suiteId: string, testId: string) {
@@ -60,10 +60,11 @@ export class TestSuiteService {
       }));
   }
 
-  runTests(id: any, userId: any) {
+  runTests(id: any, driverId: any) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
-    return this.httpClient.patch<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${id}/testcase/run`,
+    return this.httpClient.patch<any>(
+      `${environment.apiUrl}/tanistan/testsuite/project/${projectId}/suite/${id}/testcase/run/driver/${driverId}`,
       {}).pipe(map(item => {
       return item;
     }));
@@ -71,7 +72,7 @@ export class TestSuiteService {
 
   getTestSuiteCount() {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    const projectId = selectedProject ? selectedProject.id : null ;
+    const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/dashboard/project/${projectId}/testsuitecount`)
       .pipe(map(item => {
         return item;

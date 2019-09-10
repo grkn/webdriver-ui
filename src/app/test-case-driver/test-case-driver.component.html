@@ -46,6 +46,11 @@
     <mat-form-field>
       <input matInput [(ngModel)]="testCaseName" placeholder="Test Case Name"/>
     </mat-form-field>
+    <mat-form-field>
+      <mat-select [(ngModel)]="driver" [compareWith]="compareObjects" placeholder="Driver Name">
+        <mat-option *ngFor="let driver of driverList" [value]="driver">{{driver.address}}:{{driver.port}}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </mat-card-content>
 </mat-card>
 
@@ -86,7 +91,7 @@
           <input matInput placeholder="Input" [(ngModel)]="command.message"/>
         </mat-form-field>
 
-        <button mat-button color="primary"  (click)="toogleOverlay($event,overlay,command)">
+        <button mat-button color="primary" (click)="toogleOverlay($event,overlay,command)">
           <span [class]="!command.result ? '' : command.result.status == 0 ? 'greenColor' :
         'redColor'">Result</span>
         </button>

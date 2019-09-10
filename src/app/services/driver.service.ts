@@ -23,7 +23,7 @@ export class DriverService {
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/driver/${id}`).pipe(map(res => res));
   }
 
-  findAll() {
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/driver/all`).pipe(map(res => res));
+  findAll(userId: string) {
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/driver/user/${userId}/all`).pipe(map(res => res));
   }
 }

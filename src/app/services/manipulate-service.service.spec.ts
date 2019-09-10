@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ManipulateServiceService } from './manipulate-service.service';
+import { TestCaseService } from './test-case.service';
 
-describe('ManipulateServiceService', () => {
+describe('TestCaseService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ManipulateServiceService = TestBed.get(ManipulateServiceService);
+    const service: TestCaseService = TestBed.get(TestCaseService);
     expect(service).toBeTruthy();
   });
 });

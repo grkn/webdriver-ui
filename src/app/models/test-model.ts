@@ -6,4 +6,5 @@ export interface TestModel {
   createdDate: Date;
   userId: string;
   testCommands: ElementAction[];
+  driver: any;
 }

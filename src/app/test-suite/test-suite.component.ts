@@ -4,11 +4,11 @@ import {TestModel} from '../models/test-model';
 import {TreeNode} from 'primeng/api';
 import {TestSuiteService} from '../services/test-suite.service';
 import {ToastrService} from 'ngx-toastr';
-import {ManipulateServiceService} from '../services/manipulate-service.service';
+import {TestCaseService} from '../services/test-case.service';
 import {AuthenticationService} from '../services/authenticate';
-import {Observable} from 'rxjs';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatTableDataSource} from '@angular/material';
+import {DriverService} from '../services/driver.service';
 
 @Component({
   selector: 'app-test-suite',
@@ -47,17 +47,20 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   savedEvent: any;
   stepDetailsDatasource: MatTableDataSource<any> = new MatTableDataSource([]);
   stepsColumns: string[] = ['result', 'status', 'running', 'time'];
+  driverList: any = [];
+  driver: any;
 
 
   constructor(private route: ActivatedRoute, private testSuiteService: TestSuiteService,
-              private toastr: ToastrService, private manipulateService: ManipulateServiceService,
-              private authService: AuthenticationService) {
+              private toastr: ToastrService, private manipulateService: TestCaseService,
+              private authService: AuthenticationService, private driverSerive: DriverService) {
     this.route.data.subscribe(testCases => {
       this.source = testCases.testCaseResolver.content;
       const tree = testCases.testSuiteResolver;
       this.fillTreeNode(tree);
       this.treeNodes.push(tree);
     });
+    this.driverSerive.findAll(this.authService.currentUserValue.id).subscribe(res => this.driverList = res);
 
   }
 
@@ -147,11 +150,11 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     this.testSuiteService.createTestSuite(this.selectedTestSuiteId.data.id, this.newTestSuiteName).subscribe(res => {
       this.findNode(suite.value[0], this.selectedTestSuiteId.data.id);
       if (this.foundNode.children) {
-        this.fillTreeNode(res)
+        this.fillTreeNode(res);
         this.foundNode.children.push(res);
       } else {
         this.foundNode.children = [];
-        this.fillTreeNode(res)
+        this.fillTreeNode(res);
         this.foundNode.children.push(res);
       }
     });
@@ -174,8 +177,11 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   runTestSuite(rowNode) {
     this.selectedTestSuiteId = rowNode.node;
-
-    this.testSuiteService.runTests(this.selectedTestSuiteId.id, this.authService.currentUserValue.id).subscribe(res => {
+    if (!this.driver) {
+      this.toastr.error('Please Select A Driver');
+      return;
+    }
+    this.testSuiteService.runTests(this.selectedTestSuiteId.id, this.driver.id).subscribe(res => {
     });
   }
 
@@ -190,7 +196,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   showRunningTests(testCaseId: string) {
     this.selectedTestCaseId = testCaseId;
-    this.loadRunningInstanceLazy(this.savedEvent);
+    if (this.savedEvent) {
+      this.loadRunningInstanceLazy(this.savedEvent);
+    }
   }
 
   showRunningTestsAuto(id: any) {
@@ -232,5 +240,9 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
 
   filterTree(suites, value: any) {
     suites.filterGlobal(value, 'contains');
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1 && o2 && o1.address === o2.address && o1.port === o2.port;
   }
 }

@@ -1,16 +1,18 @@
-<mat-card >
+<mat-card>
   <mat-card-content fxLayoutGap="20px">
 
     <mat-form-field>
       <input matInput placeholder="New Suite Name" [(ngModel)]="newTestSuiteName"/>
     </mat-form-field>
+
     <button mat-flat-button color="primary" (click)="addTestSuite(suites)">New Suite</button>
 
     <p-treeTable [globalFilterFields]="['name']" #suites [value]="treeNodes">
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
-          <input type="text" pInputText size="50" placeholder="Global Filter" (input)="filterTree(suites,$event.target.value)" style="width:auto">
+          <input type="text" pInputText size="50" placeholder="Global Filter"
+                 (input)="filterTree(suites,$event.target.value)" style="width:auto">
         </div>
       </ng-template>
       <ng-template pTemplate="header">
@@ -32,9 +34,9 @@
             {{rowData.name}}
           </td>
           <td>
+
             <button mat-flat-button color="primary" (click)="runTestSuite(rowNode)">Run Test Suite</button>
-            <button mat-flat-button color="primary" (click)="visibilityOfTestCase(rowNode)">Add Test Case
-            </button>
+            <button mat-flat-button color="primary" (click)="visibilityOfTestCase(rowNode)">Add Test Case</button>
           </td>
         </tr>
       </ng-template>
@@ -64,7 +66,15 @@
 </mat-card>
 <mat-card *ngIf="selectedTestSuiteId">
   <mat-card-content fxLayoutGap="20px">
-    <button  mat-flat-button color="primary" (click)="clearAll()">Clear All Listenings </button>
+    <mat-form-field>
+      <mat-select [(ngModel)]="driver" [compareWith]="compareObjects" placeholder="Select Driver To Run Suite">
+        <mat-option *ngFor="let driver of driverList" [value]="driver">{{driver.address}}:{{driver.port}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <button mat-flat-button color="primary" (click)="clearAll()">Clear All Listenings</button>
+
     <br/>
     <p-table [columns]="cols" [value]="testCaseDataSource"
              [paginator]="true" [filters]="true"
@@ -110,7 +120,8 @@
 <mat-card>
   <mat-card-content>
 
-    <p-table *ngIf="selectedTestCaseId" dataKey="id" [value]="runningInstances" [lazy]="true" (onLazyLoad)="loadRunningInstanceLazy($event)"
+    <p-table *ngIf="selectedTestCaseId" dataKey="id" [value]="runningInstances" [lazy]="true"
+             (onLazyLoad)="loadRunningInstanceLazy($event)"
              [paginator]="true"
              [rows]="10" [totalRecords]="totalRecords">
 
@@ -146,7 +157,7 @@
             <table mat-table [dataSource]="rowData.steps" class="mat-elevation-z8">
               <ng-container matColumnDef="result">
                 <th mat-header-cell *matHeaderCellDef> Result</th>
-                <td mat-cell *matCellDef="let element"> {{element.result.value}}</td>
+                <td mat-cell *matCellDef="let element"> {{element.result ? element.result.value : 'Not Set'}}</td>
               </ng-container>
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef> Status</th>

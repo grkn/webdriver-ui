@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {ManipulateDriverComponent} from './manipulate-driver/manipulate-driver.component';
+import {TestCaseDriverComponent} from './test-case-driver/test-case-driver.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModules} from './material-design-import/MaterialDesignImport';
 import {SideNavBarComponent} from './side-nav-bar/side-nav-bar.component';
@@ -38,14 +38,17 @@ import {TestProjectComponent} from './test-project/test-project.component';
 import {TestProjectCreateComponent} from './test-project-create/test-project-create.component';
 import {OrderListModule} from 'primeng/orderlist';
 import {TestProjectResolverService} from './resolvers/test-project-resolver.service';
-import { RegisterComponent } from './register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { DriverComponent } from './driver/driver.component';
+import {RegisterComponent} from './register/register.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {DriverComponent} from './driver/driver.component';
+import {RunTestSuitesComponent} from './runned-test-suites/run-test-suites.component';
+import {RunTestDetailComponent} from './run-test-detail/run-test-detail.component';
+import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ManipulateDriverComponent,
+    TestCaseDriverComponent,
     SideNavBarComponent,
     LoginComponent,
     ReceiveMessageComponent,
@@ -60,6 +63,8 @@ import { DriverComponent } from './driver/driver.component';
     RegisterComponent,
     DashboardComponent,
     DriverComponent,
+    RunTestSuitesComponent,
+    RunTestDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,7 +91,7 @@ import { DriverComponent } from './driver/driver.component';
   entryComponents: [ReceiveMessageComponent, AddRoleToUserComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-    , LoginResolverService, ManipulateDriverFetchResolverService, TestProjectResolverService,
+    , LoginResolverService, ManipulateDriverFetchResolverService, TestProjectResolverService, RunTestDetailResolverService,
     TestSuiteFetchResolver, TestCaseTypeResolverService, UserManagementEditResolverService, DialogService],
   bootstrap: [AppComponent]
 })

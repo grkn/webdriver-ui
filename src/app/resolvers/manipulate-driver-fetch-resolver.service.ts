@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {AuthenticationService} from '../services/authenticate';
-import {ManipulateServiceService} from '../services/manipulate-service.service';
+import {TestCaseService} from '../services/test-case.service';
 import {EMPTY, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -10,7 +10,7 @@ import {map} from 'rxjs/operators';
 })
 export class ManipulateDriverFetchResolverService implements Resolve<any> {
 
-  constructor(private authenticationSerivce: AuthenticationService, private manipulateSerivce: ManipulateServiceService) {
+  constructor(private authenticationSerivce: AuthenticationService, private manipulateSerivce: TestCaseService) {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {

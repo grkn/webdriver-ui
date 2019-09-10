@@ -10,7 +10,7 @@ import {ElementAction} from '../models/element-action';
 @Injectable({
   providedIn: 'root'
 })
-export class ManipulateServiceService {
+export class TestCaseService {
 
   constructor(private httpClient: HttpClient, private toastr: ToastrService) {
   }
@@ -47,10 +47,11 @@ export class ManipulateServiceService {
       {}).toPromise().then(item => item);
   }
 
-  saveTest(userId: string, testCommands: ElementAction[], name: string, id: string) {
+  saveTest(userId: string, testCommands: ElementAction[], name: string, id: string, driver: any) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    const projectId = selectedProject ? selectedProject.id : null ;
-    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/user/${userId}`, {testCommands, name, id})
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/user/${userId}`,
+      {testCommands, name, id, driver})
       .pipe(map(item => {
         if (id) {
           this.toastr.success('You have successfully edited test case.');
@@ -63,7 +64,7 @@ export class ManipulateServiceService {
 
   findAllTest(userId: string, page: number, size: number) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    const projectId = selectedProject ? selectedProject.id : null ;
+    const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/user/${userId}/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
@@ -72,7 +73,7 @@ export class ManipulateServiceService {
 
   getRunningInstances(testCaseId: string, page: number, size: number) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    const projectId = selectedProject ? selectedProject.id : null ;
+    const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/${testCaseId}/instancerunner/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
@@ -81,7 +82,7 @@ export class ManipulateServiceService {
 
   findTestById(testId: string) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    const projectId = selectedProject ? selectedProject.id : null ;
+    const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/${testId}`)
       .pipe(map(item => {
         return item;
@@ -90,8 +91,26 @@ export class ManipulateServiceService {
 
   getTestCaseCount() {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    const projectId = selectedProject ? selectedProject.id : null ;
+    const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/dashboard/project/${projectId}/testcasecount`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
+
+  getRunningInstancesUnderProject(page: number, size: any) {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/result/project/${projectId}/all?page=${page}&size=${size}`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
+
+  getRunningInstanceUnderProjectById(id: string) {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/result/project/${projectId}/${id}`)
       .pipe(map(item => {
         return item;
       }));

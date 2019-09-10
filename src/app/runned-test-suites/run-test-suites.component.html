@@ -1,0 +1,32 @@
+<p-fieldset legend="Report Suites">
+  <p-table [columns]="cols" [value]="results" [lazy]="true" (onLazyLoad)="loadResultLazy($event)" [paginator]="true"
+           [rows]="10" [totalRecords]="totalRecords">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th>Test Case Name</th>
+        <th>Status</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>User Name</th>
+        <th>Running</th>
+        <th>Test Step Count</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <td>{{rowData.testCaseName}}</td>
+        <td>{{existsFail(rowData.steps) ? 'FAILED' : 'SUCCESS'}}</td>
+        <td>{{rowData.startDate | date}}</td>
+        <td>{{rowData.fisinedDate | date}}</td>
+        <td>{{rowData.userName}}</td>
+        <td>{{rowData.running}}</td>
+        <td>{{rowData.steps.length}}</td>
+        <td>
+          <button mat-flat-button color="primary" routerLink="/testsuitesrun/{{rowData.id}}">Details</button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-fieldset>
+

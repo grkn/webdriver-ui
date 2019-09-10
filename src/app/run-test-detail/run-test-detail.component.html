@@ -1,0 +1,47 @@
+<p-fieldset legend="Detail Step By Step">
+  <mat-card fxFlex="column">
+    <mat-card-content *ngFor="let command of testCommands;let i = index">
+      <mat-form-field fxFlexOffset="5px">
+        <mat-select disabled [(ngModel)]="command.type" placeholder="Actions">
+          <mat-option>None</mat-option>
+          <mat-option value="goToUrl">Navigate</mat-option>
+          <mat-option value="maximize">Maximize</mat-option>
+          <mat-option value="sendKey">Send Key</mat-option>
+          <mat-option value="click">Click Element</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
+        <mat-select disabled [(ngModel)]="command.selectionType" placeholder="Selection Type">
+          <mat-option>None</mat-option>
+          <mat-option value="id">id</mat-option>
+          <mat-option value="xpath">xpath</mat-option>
+          <mat-option value="css selector">css selector</mat-option>
+          <mat-option value="className">className</mat-option>
+          <mat-option value="name">name</mat-option>
+          <mat-option value="link text">link text</mat-option>
+          <mat-option value="partial link text">partial link text</mat-option>
+          <mat-option value="tag name">tag name</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
+        <input disabled matInput placeholder="Element Selector" [(ngModel)]="command.selectionValue"/>
+      </mat-form-field>
+      <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'goToUrl'">
+        <input disabled matInput placeholder="Navigation Url" [(ngModel)]="command.navigateUrl"/>
+      </mat-form-field>
+      <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey'">
+        <input disabled matInput placeholder="Input" [(ngModel)]="command.message"/>
+      </mat-form-field>
+      <div style="width: 50%;padding-top: 20px ">
+      <span style="margin-left: 10px"
+            [class]="steps[i].status === 0 ? 'greenColor' : 'redColor'">{{steps[i].result ? steps[i].result.value : 'Not Set'}}
+      </span>
+        <span style="margin-left: 10px">{{steps[i].executionTime}} ms
+      </span>
+      </div>
+    </mat-card-content>
+    <div>
+    <button matTooltip="Result will be ignored" mat-flat-button color="primary" (click)="runTest()">Run Test Again</button>
+    </div>
+  </mat-card>
+</p-fieldset>
