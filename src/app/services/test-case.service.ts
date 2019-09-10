@@ -98,13 +98,16 @@ export class TestCaseService {
       }));
   }
 
-  getRunningInstancesUnderProject(page: number, size: any) {
+  getRunningInstancesUnderProject(page: number, size: any, suiteName: any) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/result/project/${projectId}/all?page=${page}&size=${size}`)
-      .pipe(map(item => {
-        return item;
-      }));
+    let url = `${environment.apiUrl}/tanistan/result/project/${projectId}/all?page=${page}&size=${size}`;
+    if (suiteName) {
+      url = `${environment.apiUrl}/tanistan/result/project/${projectId}/all?page=${page}&size=${size}&suiteName=${suiteName}`;
+    }
+    return this.httpClient.get<any>(url).pipe(map(item => {
+      return item;
+    }));
   }
 
   getRunningInstanceUnderProjectById(id: string) {

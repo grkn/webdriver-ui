@@ -3,6 +3,16 @@
            [rows]="10" [totalRecords]="totalRecords">
     <ng-template pTemplate="header" let-columns>
       <tr>
+        <th>
+          <div>
+            Suite Name
+          </div>
+          <div>
+            <mat-form-field>
+              <input matInput="" type="text" placeholder="Suite Name" (change)="setSuiteName($event)">
+            </mat-form-field>
+          </div>
+        </th>
         <th>Test Case Name</th>
         <th>Status</th>
         <th>Start Date</th>
@@ -15,6 +25,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr>
+        <td>{{rowData.testCaseResource.testSuiteNames}}</td>
         <td>{{rowData.testCaseName}}</td>
         <td>{{existsFail(rowData.steps) ? 'FAILED' : 'SUCCESS'}}</td>
         <td>{{rowData.startDate | date}}</td>
