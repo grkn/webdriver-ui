@@ -18,6 +18,7 @@ function mockChart(element,testSuiteCount,testCaseCount) {
     'height': element.style.height
   };
 
+
   // Instantiate and draw our chart, passing in some options.
   var chart = new google.visualization.PieChart(element);
   chart.draw(data, options);
