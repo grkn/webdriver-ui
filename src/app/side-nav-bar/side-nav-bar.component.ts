@@ -55,14 +55,13 @@ export class SideNavBarComponent implements OnInit {
         routerLink: ['driver']
       });
 
-      this.model.push({
-        label: 'Test Suite History',
-        routerLink: ['suiterunhistory']
-      });
 
       this.model.push({
-        label: 'Test Case Report',
-        routerLink: ['testsuitesrun']
+        label: 'Test Reports',
+        items: [
+          {label: 'Test Suite Reports', icon: 'pi pi-fw pi-list', routerLink: ['suiterunhistory']},
+          {label: 'Test Case Reports', icon: 'pi pi-fw pi-plus', routerLink: ['testsuitesrun']}
+        ]
       });
 
       if (this.authenticateService.currentUserValue.userAuthorization

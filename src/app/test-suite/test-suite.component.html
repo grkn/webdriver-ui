@@ -68,8 +68,7 @@
   <mat-card-content fxLayoutGap="20px">
     <mat-form-field>
       <mat-select [(ngModel)]="driver" [compareWith]="compareObjects" placeholder="Select Driver To Run Suite">
-        <mat-option *ngFor="let driver of driverList" [value]="driver">{{driver.address}}:{{driver.port}}
-        </mat-option>
+        <mat-option *ngFor="let driver of driverList" [value]="driver">{{driver.name}}({{driver.address}})</mat-option>
       </mat-select>
     </mat-form-field>
     <br>

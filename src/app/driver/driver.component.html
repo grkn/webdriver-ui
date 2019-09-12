@@ -1,12 +1,13 @@
 <mat-card class="user-create">
   <mat-card-content>
     <p-fieldset legend="Create Driver">
+      <button mat-flat-button color="primary" (click)="openSave()">Create New Driver</button>
       <mat-form-field>
         <input matInput placeholder="Driver Address" [(ngModel)]="driver.address"/>
       </mat-form-field>
       <br>
       <mat-form-field>
-        <input matInput type="number" placeholder="Port" [(ngModel)]="driver.port"/>
+        <input matInput type="text" placeholder="Name" [(ngModel)]="driver.name"/>
       </mat-form-field>
       <button mat-flat-button color="primary" (click)="saveDriver()" *ngIf="!driver.id">Save</button>
       <button mat-flat-button color="primary" (click)="saveDriver()" *ngIf="driver.id">Edit</button>
@@ -24,7 +25,7 @@
               Address
             </th>
             <th>
-              Port
+              Name
             </th>
             <th>
               Actions
@@ -40,7 +41,7 @@
               {{rowData.address}}
             </td>
             <td>
-              {{rowData.port}}
+              {{rowData.name}}
             </td>
             <td>
               <button mat-flat-button color="primary" (click)="selectDriver(rowData.id)">Edit</button>

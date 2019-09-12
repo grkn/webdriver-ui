@@ -10,7 +10,7 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class DriverComponent implements OnInit {
 
-  driver: any = {address: '', port: 0, id: ''};
+  driver: any = {address: '', name: '', id: ''};
   driverList: any = [];
 
   constructor(private driverService: DriverService, private authenticationService: AuthenticationService, private toastr: ToastrService) {
@@ -51,5 +51,9 @@ export class DriverComponent implements OnInit {
         this.driver = item;
       }
     });
+  }
+
+  openSave() {
+    this.driver =  {address: '', name: '', id: ''};
   }
 }
