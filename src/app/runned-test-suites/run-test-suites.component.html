@@ -25,8 +25,8 @@
         <td>{{rowData.testCaseResource.testSuiteNames}}</td>
         <td>{{rowData.testCaseName}}</td>
         <td>{{existsFail(rowData.steps) ? 'FAILED' : 'SUCCESS'}}</td>
-        <td>{{rowData.startDate | date}}</td>
-        <td>{{rowData.fisinedDate | date}}</td>
+        <td>{{rowData.startDate | date:'medium'}}</td>
+        <td>{{rowData.fisinedDate | date:'medium'}}</td>
         <td>{{rowData.userName}}</td>
         <td>{{rowData.running}}</td>
         <td>{{rowData.steps.length}}</td>
