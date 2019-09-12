@@ -44,6 +44,8 @@ import {DriverComponent} from './driver/driver.component';
 import {RunTestSuitesComponent} from './runned-test-suites/run-test-suites.component';
 import {RunTestDetailComponent} from './run-test-detail/run-test-detail.component';
 import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
+import { TestSuiteRunHistoryComponent } from './test-suite-run-history/test-suite-run-history.component';
+import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detail/test-suite-run-history-detail.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +67,8 @@ import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver
     DriverComponent,
     RunTestSuitesComponent,
     RunTestDetailComponent,
+    TestSuiteRunHistoryComponent,
+    TestSuiteRunHistoryDetailComponent,
   ],
   imports: [
     BrowserModule,

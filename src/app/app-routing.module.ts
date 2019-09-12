@@ -21,6 +21,9 @@ import {DriverComponent} from './driver/driver.component';
 import {RunTestSuitesComponent} from './runned-test-suites/run-test-suites.component';
 import {RunTestDetailComponent} from './run-test-detail/run-test-detail.component';
 import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
+import {TestSuiteRunHistoryComponent} from './test-suite-run-history/test-suite-run-history.component';
+import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detail/test-suite-run-history-detail.component';
+import {TestSuiteRunHistoryDetailResolverService} from './resolvers/test-suite-run-history-detail-resolver.service';
 
 const routes: Routes = [
   {
@@ -125,6 +128,21 @@ const routes: Routes = [
     resolve: {
       loginResolver: LoginResolverService,
       runTestDetailResolver: RunTestDetailResolverService
+    }
+  },
+  {
+    path: 'suiterunhistory',
+    component: TestSuiteRunHistoryComponent,
+    resolve: {
+      loginResolver: LoginResolverService
+    }
+  },
+  {
+    path: 'suiterunhistory/:runId/detail/:testsuiteId',
+    component: TestSuiteRunHistoryDetailComponent,
+    resolve: {
+      loginResolver: LoginResolverService,
+      testSuiteRunHistoryDetailResolver: TestSuiteRunHistoryDetailResolverService
     }
   },
   {

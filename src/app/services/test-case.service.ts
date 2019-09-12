@@ -74,7 +74,8 @@ export class TestCaseService {
   getRunningInstances(testCaseId: string, page: number, size: number) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/${testCaseId}/instancerunner/all?page=${page}&size=${size}`)
+    return this.httpClient.get<any>(
+      `${environment.apiUrl}/tanistan/test/project/${projectId}/${testCaseId}/instancerunner/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
       }));

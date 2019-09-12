@@ -14,7 +14,7 @@ export class RunTestSuitesComponent implements OnInit {
   suiteName: string;
   delayId: any;
 
-  constructor(private manipulateService: TestCaseService) {
+  constructor(private testCaseService: TestCaseService) {
   }
 
   ngOnInit() {
@@ -32,7 +32,7 @@ export class RunTestSuitesComponent implements OnInit {
   }
 
   loadResultLazy($event: any) {
-    this.manipulateService.getRunningInstancesUnderProject($event.first / $event.rows, $event.rows, $event.suiteFilter).subscribe(res => {
+    this.testCaseService.getRunningInstancesUnderProject($event.first / $event.rows, $event.rows, $event.suiteFilter).subscribe(res => {
       this.totalRecords = res.totalElements;
       this.results = res.content;
       this.savedEvent = $event;
@@ -49,4 +49,5 @@ export class RunTestSuitesComponent implements OnInit {
       clearTimeout(this.delayId);
     }, 700);
   }
+
 }

@@ -78,4 +78,13 @@ export class TestSuiteService {
         return item;
       }));
   }
+
+  findAllTestSuites(page: any, size: any) {
+    const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+    const projectId = selectedProject ? selectedProject.id : null;
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/result/project/${projectId}/suites?page=${page}&size=${size}`)
+      .pipe(map(item => {
+        return item;
+      }));
+  }
 }
