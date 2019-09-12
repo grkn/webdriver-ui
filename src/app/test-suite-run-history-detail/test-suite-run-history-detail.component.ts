@@ -10,7 +10,8 @@ import {TestCaseService} from '../services/test-case.service';
 export class TestSuiteRunHistoryDetailComponent implements OnInit {
 
   reportDatasource: any[] = [];
-
+  testSuiteName: string;
+  stepsColumns: string[] = ['result', 'status', 'running', 'time'];
 
   constructor(private activatedRoute: ActivatedRoute, private testCase: TestCaseService) {
     this.activatedRoute.data.subscribe(data => {
@@ -21,6 +22,8 @@ export class TestSuiteRunHistoryDetailComponent implements OnInit {
           testRunnerReports.forEach(latestReport => {
             if (runners.runId === latestReport.testSuiteInstanceRunnerId) {
               latestReport.testCaseId = runners.id;
+              latestReport.testCaseName = runners.name;
+              this.testSuiteName = latestReport.testSuiteInstanceRunnerName;
               this.reportDatasource.push(latestReport);
             }
           });
@@ -32,4 +35,15 @@ export class TestSuiteRunHistoryDetailComponent implements OnInit {
   ngOnInit() {
   }
 
+  existsFail(steps: any[]) {
+    if (steps) {
+      for (const step of steps) {
+        if (step.status !== 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }
+
