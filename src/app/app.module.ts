@@ -4,14 +4,13 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {TestCaseDriverComponent} from './test-case-driver/test-case-driver.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModules} from './material-design-import/MaterialDesignImport';
 import {SideNavBarComponent} from './side-nav-bar/side-nav-bar.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {HttpInterceptorService} from './interceptor/http-interceptor.service';
 import {ErrorInterceptor} from './interceptor/error-interceptor';
 import {LoginComponent} from './login/login.component';
-import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule} from '@angular/forms';
 import {ReceiveMessageComponent} from './dialogs/receive-message/receive-message.component';
 import {LoginResolverService} from './resolvers/login-resolver.service';
@@ -44,8 +43,10 @@ import {DriverComponent} from './driver/driver.component';
 import {RunTestSuitesComponent} from './runned-test-suites/run-test-suites.component';
 import {RunTestDetailComponent} from './run-test-detail/run-test-detail.component';
 import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
-import { TestSuiteRunHistoryComponent } from './test-suite-run-history/test-suite-run-history.component';
+import {TestSuiteRunHistoryComponent} from './test-suite-run-history/test-suite-run-history.component';
 import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detail/test-suite-run-history-detail.component';
+import {ScrollPanelModule} from 'primeng/primeng';
+import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
 
 @NgModule({
   declarations: [
@@ -69,14 +70,16 @@ import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detai
     RunTestDetailComponent,
     TestSuiteRunHistoryComponent,
     TestSuiteRunHistoryDetailComponent,
+    AppMenuComponent,
+    AppSubMenuComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    NoopAnimationsModule,
     MaterialModules,
     HttpClientModule,
-    FlexLayoutModule,
     FormsModule,
     ToastrModule.forRoot({
       timeOut: 4000,
@@ -90,14 +93,16 @@ import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detai
     SlideMenuModule,
     FieldsetModule,
     DynamicDialogModule,
-    OrderListModule
+    OrderListModule,
+    ScrollPanelModule
   ],
   entryComponents: [ReceiveMessageComponent, AddRoleToUserComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
     , LoginResolverService, ManipulateDriverFetchResolverService, TestProjectResolverService, RunTestDetailResolverService,
     TestSuiteFetchResolver, TestCaseTypeResolverService, UserManagementEditResolverService, DialogService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: []
 })
 export class AppModule {
 }

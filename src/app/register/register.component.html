@@ -1,32 +1,46 @@
-<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
-  <mat-card class="box">
-    <mat-card-content>
-      <p-fieldset legend="Sign Up">
-        <div class="example-form">
-          <mat-form-field>
-            <input matInput placeholder="Email" [(ngModel)]="user.emailAddress"/>
-          </mat-form-field>
-          <br>
-          <mat-form-field>
-            <input matInput type="password" placeholder="Password" [(ngModel)]="user.accountPhrase"/>
-          </mat-form-field>
-          <br>
-          <mat-form-field>
-            <input matInput placeholder="Name" [(ngModel)]="user.name"/>
-          </mat-form-field>
-          <br>
-          <mat-form-field>
-            <input matInput placeholder="Last Name" [(ngModel)]="user.lastName"/>
-          </mat-form-field>
-          <br>
-          <mat-form-field>
-            <input matInput placeholder="Company" [(ngModel)]="user.companyName"/>
-          </mat-form-field>
-          <br>
-          <button mat-flat-button color="primary" (click)="register()">Sign Up</button>
+<div class="login-body">
+  <div id="login-wrapper">
+    <img src="../layout/images/login-logo.png">
 
+    <div id="login-container">
+      <span class="title">Omega</span>
+
+      <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+          <input type="text" [(ngModel)]="user.emailAddress" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget"
+                 placeholder="Username"/>
         </div>
-      </p-fieldset>
-    </mat-card-content>
-  </mat-card>
+        <div class="ui-g-12">
+          <input type="password" [(ngModel)]="user.accountPhrase" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget"
+                 placeholder="Password"/>
+        </div>
+        <div class="ui-g-12">
+          <input type="text" [(ngModel)]="user.name" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget"
+                 placeholder="Name"/>
+        </div>
+        <div class="ui-g-12">
+          <input type="text" [(ngModel)]="user.lastName" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget"
+                 placeholder="Last Name"/>
+        </div>
+        <div class="ui-g-12">
+          <input type="text" autocomplete="off" class="ui-inputtext ui-corner-all ui-state-default ui-widget"
+                 placeholder="Company" [(ngModel)]="user.companyName"/>
+        </div>
+
+        <div class="ui-g-12">
+          <button (click)="register()" type="button"
+                  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left">
+            <span class="ui-button-icon-left ui-c fa fa-fw ui-icon-person"></span>
+            <span class="ui-button-text ui-c">Sign Up</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-footer">PrimeNG Omega</div>
+  </div>
 </div>

@@ -1,93 +1,61 @@
-<div class="container" style="align-self: center;align-content: center" gdAreas.xs="header | sidebar | content | footer"
-     gdGap="1em"
-     gdColumns.xs="none"
-     gdAreas.sm="header header header | sidebar content  content | footer footer footer"
-     gdAreas.gt-sm="header header header | sidebar content content| footer footer footer"
-     gdColumns.gt-sm="250px auto 120px" gdGap.gt-sm="20px" [ngStyle]="{'max-width': 'auto'}"
-     [ngStyle.gt-sm]="{'max-width': 'auto'}">
-
-
-  <div class="site_header" gdArea="header">
-    <mat-card>
-      <mat-card-title>
-        <div>Test Automation
-          <a mat-button (click)="logout()" style="float:right">Logout</a>
+<div class="wrapper" [ngClass]="{'sidebar-inactive-l':menuInactiveDesktop, 'sidebar-active-m':menuActiveMobile}">
+  <div *ngIf="hideExplanation" class="topbar clearfix">
+    <a id="omega-menu-button" href="#" (click)="toggleMenu($event)">
+      <span class="fa fa-bars"></span>
+    </a>
+    <span class="topbar-title"></span>
+    <a id="options-menu-button" href="#" (click)="toggleTopMenu($event)">
+      <span class="fa fa-ellipsis-h"></span>
+    </a>
+    <div id="topbar-icons" class="animated" [ngClass]="{'topbar-icons-visible flipInX':topMenuActive,'flipOutX':topMenuLeaving}">
+            <span class="topbar-search" (click)="onSearchClick()">
+                <input type="text" placeholder="Search" />
+                <span class="topbar-search-icon fa fa-search"></span>
+            </span>
+      <a href="#">
+        <span class="topbar-item-text">Messages</span>
+        <span class="topbar-icon fa fa-envelope-o animated swing"></span>
+        <span class="topbar-badge animated rubberBand">5</span>
+      </a>
+      <a href="#">
+        <span class="topbar-item-text">Settings</span>
+        <span class="topbar-icon fa fa-gear"></span>
+      </a>
+      <a href="#">
+        <span class="topbar-item-text">User</span>
+        <span class="topbar-icon fa fa-user">{{user && user.name ? 'Welcome ' + user.name : 'Welcome Guest'}}</span>
+      </a>
+    </div>
+  </div>
+  <div *ngIf="hideExplanation" class="sidebar" (click)="onMenuClick()">
+    <p-scrollPanel #scroller [style]="{height: '100%'}">
+      <div class="sidebar-scroll-content">
+        <div class="logo">
+          <img src="assets/layout/images/logo.png" alt="" width="113">
         </div>
-      </mat-card-title>
-      <mat-card-content>
-        <mat-select #projectId style="width: 200px" (selectionChange)="selectProject($event)" placeholder="Projects">
-          <mat-option [value]="{id: project.id, name: project.name}" *ngFor="let project of projects">
-            {{project.name}}
-          </mat-option>
-        </mat-select>
-        <span style="float:right">{{user && user.name ? 'Welcome ' + user.name : 'Welcome Guest'}}</span>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div gdArea="sidebar" class="side_bar">
-    <div *ngIf="hideExplanation">
-      <app-side-nav-bar (toggleSideBar)="toggle($event)"></app-side-nav-bar>
-    </div>
-    <div *ngIf="!hideExplanation">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Explanation about project</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          This product resolves the issues between selenium and tester.
-          For example all testers does not need to know how to write code and test it.
-          ...
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
-  <div gdArea="content" class="main_content">
-    <router-outlet></router-outlet>
-  </div>
-
-
-  <!-- Site footer -->
-  <footer gdArea="footer" class="site-footer">
-    <div fxFlex="row">
-      <div>
-        <h6>About</h6>
-        <p class="text-justify">Test Automation is an initiative to help the upcoming
-          programmers with the test. </p>
-      </div>
-
-      <div>
-        <h6>Quick Links</h6>
-        <ul class="footer-links">
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-        </ul>
-      </div>
-    </div>
-    <div fxFlex="row">
-      <div>
-        <div>
-          <p class="copyright-text">Copyright &copy; 2019 All Rights Reserved by
-            <a href="#">Test Automation</a>.
-          </p>
-        </div>
-
-        <div>
-          <ul class="social-icons">
-            <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-            <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-            <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
-            <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+        <div class="profile">
+          <img src="assets/layout/images/profile.png" alt="" />
+          <a id="profile-button" href="#" (click)="toggleProfile($event)">
+            <span class="username">Peggy Olson</span>
+            <i class="fa fa-fw fa-cog"></i>
+          </a>
+          <ul [@submenu]="profileActive ? 'visible' : 'hidden'">
+            <li><a href="#"><i class="fa fa-fw fa-sliders"></i><span>Account</span></a></li>
+            <li><a href="#"><i class="fa fa-fw fa-bell"></i><span>Notifications</span><span class="menu-badge">2</span></a></li>
+            <li><a (click)="logout()"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a></li>
           </ul>
         </div>
+        <app-menu></app-menu>
       </div>
-    </div>
-    <hr/>
-  </footer>
-
+    </p-scrollPanel>
+  </div>
+  <div class="main">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="footer">
+    <img src="assets/layout/images/logo-colored.png" alt="" width="32">
+    <span class="footer-text">Test Pine Footer</span>
+  </div>
 </div>
-
 
 
