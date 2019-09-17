@@ -1,66 +1,59 @@
 <p-fieldset legend="Report Suite Details">
-  <mat-card>
-    <mat-card-header>
-        <mat-card-title>
-          Suite Name : {{testSuiteName}}
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p-table [value]="reportDatasource" [paginator]="true" [rows]="10" dataKey="id">
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <th style="width: 3em"></th>
-            <th>Test Run Id</th>
-            <th>Test Case Name</th>
-            <th>Status</th>
-            <th>Started Date</th>
-            <th>End Date</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowData let-columns="columns">
-          <tr>
-            <td>
-              <a [pRowToggler]="rowData">
-                <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
-              </a>
-            </td>
-            <td>{{rowData.id}}</td>
-            <td>{{rowData.testCaseName}}</td>
-            <td>{{existsFail(rowData.steps) ? 'FAILED' : 'SUCCESS'}}</td>
-            <td>{{rowData.startDate |date:'medium'}}</td>
-            <td>{{rowData.fisinedDate |date:'medium'}}</td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
-          <tr>
-            <td colspan="7">
-              <table mat-table [dataSource]="rowData.steps" class="mat-elevation-z8">
-                <ng-container matColumnDef="result">
-                  <th mat-header-cell *matHeaderCellDef> Result</th>
-                  <td mat-cell *matCellDef="let element"> {{element.status === 0 ? 'SUCCESS' : 'FAILED'}}</td>
-                </ng-container>
-                <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef> Status</th>
-                  <td mat-cell *matCellDef="let element"> {{element.status}}</td>
-                </ng-container>
-                <ng-container matColumnDef="running">
-                  <th mat-header-cell *matHeaderCellDef> Running</th>
-                  <td mat-cell *matCellDef="let element"> {{element.runStatus}}</td>
-                </ng-container>
-                <ng-container matColumnDef="time">
-                  <th mat-header-cell *matHeaderCellDef> ExecutionTime</th>
-                  <td mat-cell *matCellDef="let element"> {{element.executionTime}} ms</td>
-                </ng-container>
+  <div class="ui-g-12">
+    <span><h3>Suite Name : {{testSuiteName}}</h3></span>
+    <p-table [value]="reportDatasource" [paginator]="true" [rows]="10" dataKey="id">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em"></th>
+          <th>Test Run Id</th>
+          <th>Test Case Name</th>
+          <th>Status</th>
+          <th>Started Date</th>
+          <th>End Date</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+          <td>
+            <a [pRowToggler]="rowData">
+              <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+            </a>
+          </td>
+          <td>{{rowData.id}}</td>
+          <td>{{rowData.testCaseName}}</td>
+          <td>{{existsFail(rowData.steps) ? 'FAILED' : 'SUCCESS'}}</td>
+          <td>{{rowData.startDate |date:'medium'}}</td>
+          <td>{{rowData.fisinedDate |date:'medium'}}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+        <tr>
+          <td colspan="7">
+            <table mat-table [dataSource]="rowData.steps" class="mat-elevation-z8">
+              <ng-container matColumnDef="result">
+                <th mat-header-cell *matHeaderCellDef> Result</th>
+                <td mat-cell *matCellDef="let element"> {{element.status === 0 ? 'SUCCESS' : 'FAILED'}}</td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Status</th>
+                <td mat-cell *matCellDef="let element"> {{element.status}}</td>
+              </ng-container>
+              <ng-container matColumnDef="running">
+                <th mat-header-cell *matHeaderCellDef> Running</th>
+                <td mat-cell *matCellDef="let element"> {{element.runStatus}}</td>
+              </ng-container>
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef> ExecutionTime</th>
+                <td mat-cell *matCellDef="let element"> {{element.executionTime}} ms</td>
+              </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="stepsColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: stepsColumns;"></tr>
-              </table>
+              <tr mat-header-row *matHeaderRowDef="stepsColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: stepsColumns;"></tr>
+            </table>
 
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </mat-card-content>
-  </mat-card>
-
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </p-fieldset>

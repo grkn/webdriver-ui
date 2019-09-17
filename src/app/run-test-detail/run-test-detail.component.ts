@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TestCaseService} from '../services/test-case.service';
+import {SelectItem} from 'primeng/api';
+import {ElementAction} from '../models/element-action';
 
 @Component({
   selector: 'app-run-test-detail',
@@ -10,8 +12,19 @@ import {TestCaseService} from '../services/test-case.service';
 export class RunTestDetailComponent implements OnInit {
 
   testCommands: any[] = [];
+  result: any;
   steps: any[] = [];
   sessionId: string;
+  commandTypes: SelectItem[] = [{label: 'Navigate', value: 'goToUrl'}, {label: 'Maximize', value: 'maximize'},
+    {label: 'Send Keys', value: 'sendKey'}, {label: 'Click Element', value: 'click'}];
+  commandSelectionType: SelectItem[] = [{label: 'id', value: 'id'},
+    {label: 'xpath', value: 'xpath'},
+    {label: 'css selector', value: 'css selector'},
+    {label: 'className', value: 'className'},
+    {label: 'name', value: 'name'},
+    {label: 'link text', value: 'link text'},
+    {label: 'partial link text', value: 'partial link text'},
+    {label: 'tag name', value: 'tag name'}];
 
   constructor(private activatedRoute: ActivatedRoute, private testCaseService: TestCaseService) {
     this.activatedRoute.data.subscribe(data => {

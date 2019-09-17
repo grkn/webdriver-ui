@@ -19,7 +19,8 @@
         <td>{{rowData.startDate | date:'medium'}}</td>
         <td>{{rowData.endDate | date:'medium'}}</td>
         <td>
-          <button mat-flat-button color="primary" routerLink="/suiterunhistory/{{rowData.id}}/detail/{{rowData.testSuite.id}}">Details</button>
+          <button pButton color="primary" routerLink="/suiterunhistory/{{rowData.id}}/detail/{{rowData.testSuite.id}}"
+                  label="Details"></button>
         </td>
       </tr>
     </ng-template>

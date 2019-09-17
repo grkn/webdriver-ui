@@ -1,14 +1,15 @@
-<mat-card class="role-create">
-  <mat-card-content>
-    <p-fieldset legend="Create Role">
-      <button mat-flat-button color="primary" (click)="addNewRole()">Add New Role</button>
-      <div *ngFor="let role of roles;let i = index">
-        <mat-form-field>
-          <input matInput placeholder="Name" [(ngModel)]="role.name"/>
-        </mat-form-field>
-        <button mat-flat-button color="primary" (click)="removeRole(role)">Remove</button>
-      </div>
-      <button mat-flat-button color="primary" (click)="saveRole()">Save</button>
-    </p-fieldset>
-  </mat-card-content>
-</mat-card>
+<p-fieldset legend="Create Role">
+  <div class="ui-g-4">
+  <button pButton label="Add New Role" color="primary" (click)="addNewRole()"></button>
+  </div>
+  <div class="ui-g-12" *ngFor="let role of roles">
+    <div class="ui-g-6">
+      <input type="text" placeholder="Name" [(ngModel)]="role.name" autocomplete="off"
+             class="ui-inputtext ui-corner-all ui-state-default ui-widget"/>
+    </div>
+    <button pButton label="Remove" (click)="removeRole(role)"></button>
+  </div>
+  <div class="ui-g-4">
+    <button pButton label="Save" (click)="saveRole()"></button>
+  </div>
+</p-fieldset>

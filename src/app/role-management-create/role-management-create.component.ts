@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {RoleService} from '../services/role.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-role-management-create',
@@ -10,7 +11,7 @@ export class RoleManagementCreateComponent implements OnInit {
 
   roles: any[] = [];
 
-  constructor(private roleService: RoleService) {
+  constructor(private roleService: RoleService, private toastr: ToastrService) {
   }
 
   ngOnInit() {
@@ -25,7 +26,9 @@ export class RoleManagementCreateComponent implements OnInit {
       count++;
     });
 
-    this.roleService.save(this.roles).subscribe();
+    this.roleService.save(this.roles).subscribe(item => {
+      this.toastr.success('Role Saved Successfully');
+    });
   }
 
   addNewRole() {

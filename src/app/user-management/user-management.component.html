@@ -1,7 +1,8 @@
-<mat-card>
-
-  <mat-card-content>
-    <button mat-flat-button routerLink="/usermanagement/create" color="primary">Create User</button>
+<p-fieldset legend="User">
+  <div class="ui-g-4">
+    <button pButton routerLink="/usermanagement/create" label="Create User"></button>
+  </div>
+  <div class="ui-g-12">
     <p-table dataKey="id" [value]="users" [lazy]="true" (onLazyLoad)="loadUsersLazy($event)"
              [paginator]="true"
              [rows]="10" [totalRecords]="totalElements">
@@ -31,12 +32,12 @@
             </ol>
           </td>
           <td>
-            <button mat-flat-button color="primary" routerLink="/usermanagement/create/{{rowData.id}}">Edit</button>
-            <button mat-flat-button color="primary" (click)="deleteById(rowData.id)">Delete</button>
-            <button mat-flat-button color="primary" (click)="show(rowData.id)">Add Role</button>
+            <button pButton routerLink="/usermanagement/create/{{rowData.id}}" label="Edit"></button>
+            <button pButton (click)="deleteById(rowData.id)" label="Delete"></button>
+            <button pButton (click)="show(rowData.id)" label="Add Role"></button>
           </td>
         </tr>
       </ng-template>
     </p-table>
-  </mat-card-content>
-</mat-card>
+  </div>
+</p-fieldset>

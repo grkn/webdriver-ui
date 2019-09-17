@@ -97,17 +97,6 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     }
   }
 
-  private expandAll(tree: any) {
-    if (tree) {
-      tree.expanded = true;
-      if (tree.children) {
-        tree.children.forEach(treeChild => {
-          this.fillTreeNode(treeChild);
-        });
-      }
-    }
-  }
-
   selectedNode(rowNode) {
     this.selectedTestSuiteId = rowNode.node;
     this.selectedTestCaseId = undefined;
