@@ -1,39 +1,62 @@
-<div
-  fxLayout="row wrap"
-  fxLayout.lt-sm="column"
-  fxLayoutGap="32px"
-  fxLayoutAlign="flex-start">
-  <ng-container>
-    <div class="widget" *ngIf="isProjectSelected"
-         fxFlex="0 1 calc(25% - 32px)"
-         fxFlex.lt-md="0 1 calc(50% - 32px)"
-         fxFlex.lt-sm="100%"
-    >
-      <span># of Test Cases : {{testcaseCount | async}}</span>
+<div class="ui-g ui-fluid dashboard" *ngIf="isProjectSelected">
+  <div class="ui-g-12 ui-md-6 ui-lg-3">
+    <div class="highlight-box">
+      <div class="initials" style="background-color:#007be5;color:#00448f">#TC</div>
+      <div class="card">
+        <span class="fa fa-eye"></span>
+        <span>Total Test Cases</span>
+        <span class="count">{{testcaseCount | async}}</span>
+      </div>
     </div>
-    <div class="widget" *ngIf="isProjectSelected"
-         fxFlex="0 1 calc(25% - 32px)"
-         fxFlex.lt-md="0 1 calc(50% - 32px)"
-         fxFlex.lt-sm="100%"
-    >
-      <span># of Test Suites : {{testSuiteCount | async}}</span>
+  </div>
+  <div class="ui-g-12 ui-md-6 ui-lg-3">
+    <div class="highlight-box">
+      <div class="initials" style="background-color:#ef6262;color:#a83d3b">#TS</div>
+      <div class="card">
+        <span class="fa fa-question-circle"></span>
+        <span>Total Test Suites</span>
+        <span class="count">{{testSuiteCount | async}}</span>
+      </div>
     </div>
-    <div class="widget" *ngIf="isProjectSelected"
-         fxFlex="0 1 calc(50% - 32px)"
-         fxFlex.lt-md="0 1 calc(100% - 32px)"
-         fxFlex.lt-sm="100%"
-    >
+  </div>
+  <div class="ui-g-12 ui-md-6 ui-lg-3">
+    <div class="highlight-box">
+      <div class="initials" style="background-color:#20d077;color:#038d4a">OI</div>
+      <div class="card">
+        <span class="fa fa-question-circle-o"></span>
+        <span>Open Issues</span>
+        <span class="count">21</span>
+      </div>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6 ui-lg-3">
+    <div class="highlight-box">
+      <div class="initials" style="background-color:#f9c851;color:#b58c2b">CI</div>
+      <div class="card">
+        <span class="fa fa-check"></span>
+        <span>Closed Issues</span>
+        <span class="count">60</span>
+      </div>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6 ui-lg-4">
       <div id="mockChart"></div>
-    </div>
-    <div class="widget" *ngIf="!isProjectSelected"
-         fxFlex="0 1 calc(100% - 32px)"
-         fxFlex.lt-md="0 1 calc(100% - 32px)"
-         fxFlex.lt-sm="100%"
-    >
+  </div>
+  <div class="ui-g-12 ui-md-6 ui-lg-4">
+    <div>TEST CHART</div>
+  </div>
+  <div class="ui-g-12 ui-md-6 ui-lg-4">
+    <div>TEST CHART</div>
+  </div>
+</div>
+
+<div class="ui-g ui-fluid dashboard" *ngIf="!isProjectSelected">
+  <div class="ui-g-12 ui-md-12 ui-lg-12">
+    <div class="card">
       <span style="color:red">
         <p>There is not any defined project or selected project</p>
         <button routerLink="/testproject/create" mat-flat-button color="primary">Create Project</button>
       </span>
     </div>
-  </ng-container>
+  </div>
 </div>

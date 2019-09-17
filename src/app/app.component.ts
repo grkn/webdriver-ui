@@ -13,7 +13,7 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  hideExplanation: boolean = false;
+  hideNavBar: boolean = false;
   projects: any = [];
   user: User;
   @ViewChild(SideNavBarComponent, {static: false})
@@ -45,9 +45,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     , public renderer: Renderer2) {
     this.authenticateService.user.subscribe(user => {
       if (user && user.id) {
-        this.hideExplanation = true;
+        this.hideNavBar = true;
       } else {
-        this.hideExplanation = false;
+        this.hideNavBar = false;
       }
       this.user = user;
       this.findAllProjects();

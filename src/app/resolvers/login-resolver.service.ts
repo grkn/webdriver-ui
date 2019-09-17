@@ -14,7 +14,7 @@ export class LoginResolverService implements Resolve<User> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User> {
     if (!this.authenticationService.currentUserValue) {
-      this.router.navigate(['login'], {queryParams: {redirectUrl: route.url[0].path}});
+      this.router.navigate(['login'], {queryParams: {redirectUrl: route.url[0] ? route.url[0].path : 'dashboard'}});
       return EMPTY;
     }
     return of(this.authenticationService.currentUserValue);
