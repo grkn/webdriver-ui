@@ -12,7 +12,7 @@ export class TestProjectComponent implements OnInit {
 
   projects: any;
   userList: any;
-  source: any;
+  source: any = [];
   selectedProjectId: string;
   selectedProject: any;
 
@@ -35,10 +35,10 @@ export class TestProjectComponent implements OnInit {
         if (user.content.length > 0) {
           this.userList.forEach(item => {
             if (item) {
-              this.source = user.content.filter(filter => filter.id !== item.id);
-
+              user.content = user.content.filter(filter => filter.id !== item.id);
             }
           });
+          this.source = user.content;
         }
       });
     }
