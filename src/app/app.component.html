@@ -9,10 +9,14 @@
     </a>
     <div id="topbar-icons" class="animated"
          [ngClass]="{'topbar-icons-visible flipInX':topMenuActive,'flipOutX':topMenuLeaving}">
-            <span class="topbar-search" (click)="onSearchClick()">
-                <input type="text" placeholder="Search"/>
-                <span class="topbar-search-icon fa fa-search"></span>
-            </span>
+      <span>
+        Selected Project : {{selectedProject.label}}
+      </span>
+
+      <span class="topbar-search" (click)="onSearchClick()">
+          <input type="text" placeholder="Search"/>
+          <span class="topbar-search-icon fa fa-search"></span>
+      </span>
       <a href="#">
         <span class="topbar-item-text">Messages</span>
         <span class="topbar-icon fa fa-envelope-o animated swing"></span>
@@ -32,12 +36,16 @@
     <p-scrollPanel #scroller [style]="{height: '100%'}">
       <div class="sidebar-scroll-content">
         <div class="logo">
-          <img src="assets/layout/images/logo.png" alt="" width="113">
+          <h3 style="color: #ffffff;">Test Pine</h3>
+          <!--<img src="assets/layout/images/logo.png" alt="" width="113">-->
         </div>
         <div class="profile">
-          <img src="assets/layout/images/profile.png" alt=""/>
+          <p-dropdown [options]="projects" [(ngModel)]="selectedProject.value" (onChange)="selectProject($event)"
+                      placeholder="Projects">
+          </p-dropdown>
+          <br/>
           <a id="profile-button" href="#" (click)="toggleProfile($event)">
-            <span class="username">Peggy Olson</span>
+            <span class="username">{{user && user.name ?  user.name + ' ' + user.lastName : 'Welcome Guest'}}</span>
             <i class="fa fa-fw fa-cog"></i>
           </a>
           <ul [@submenu]="profileActive ? 'visible' : 'hidden'">

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TestModel} from '../models/test-model';
-import {TreeNode} from 'primeng/api';
+import {SelectItem, TreeNode} from 'primeng/api';
 import {TestSuiteService} from '../services/test-suite.service';
 import {ToastrService} from 'ngx-toastr';
 import {TestCaseService} from '../services/test-case.service';
@@ -47,8 +47,8 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   savedEvent: any;
   stepDetailsDatasource: MatTableDataSource<any> = new MatTableDataSource([]);
   stepsColumns: string[] = ['result', 'status', 'running', 'time'];
-  driverList: any = [];
-  driver: any;
+  driverList: SelectItem[] = [];
+  driver: SelectItem = {label: '', value: ''};
 
 
   constructor(private route: ActivatedRoute, private testSuiteService: TestSuiteService,
@@ -60,8 +60,11 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
       this.fillTreeNode(tree);
       this.treeNodes.push(tree);
     });
-    this.driverSerive.findAll(this.authService.currentUserValue.id).subscribe(res => this.driverList = res);
-
+    this.driverSerive.findAll(this.authService.currentUserValue.id).subscribe(res => {
+      res.forEach(driver => {
+        this.driverList.push({label: driver.name + '(' + driver.address + ')', value: driver});
+      });
+    });
   }
 
   ngOnInit() {
@@ -181,7 +184,7 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
       this.toastr.error('Please Select A Driver');
       return;
     }
-    this.testSuiteService.runTests(this.selectedTestSuiteId.id, this.driver.id).subscribe(res => {
+    this.testSuiteService.runTests(this.selectedTestSuiteId.id, this.driver.value.id).subscribe(res => {
     });
   }
 
@@ -242,7 +245,4 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     suites.filterGlobal(value, 'contains');
   }
 
-  compareObjects(o1: any, o2: any): boolean {
-    return o1 && o2 && o1.address === o2.address && o1.port === o2.port;
-  }
 }

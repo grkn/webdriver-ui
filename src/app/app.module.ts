@@ -45,7 +45,7 @@ import {RunTestDetailComponent} from './run-test-detail/run-test-detail.componen
 import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
 import {TestSuiteRunHistoryComponent} from './test-suite-run-history/test-suite-run-history.component';
 import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detail/test-suite-run-history-detail.component';
-import {ButtonModule, ScrollPanelModule} from 'primeng/primeng';
+import {ButtonModule, DropdownModule, RadioButtonModule, ScrollPanelModule} from 'primeng/primeng';
 import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
 
 @NgModule({
@@ -77,7 +77,6 @@ import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule,
     MaterialModules,
     HttpClientModule,
     FormsModule,
@@ -95,7 +94,9 @@ import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
     DynamicDialogModule,
     OrderListModule,
     ScrollPanelModule,
-    ButtonModule
+    ButtonModule,
+    DropdownModule,
+    RadioButtonModule
   ],
   entryComponents: [ReceiveMessageComponent, AddRoleToUserComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},

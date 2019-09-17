@@ -3,8 +3,7 @@ import {AuthenticationService} from './services/authenticate';
 import {SideNavBarComponent} from './side-nav-bar/side-nav-bar.component';
 import {User} from './models/user';
 import {TestProjectService} from './services/test-project.service';
-import {ScrollPanel} from 'primeng/primeng';
-import {ActivatedRoute} from '@angular/router';
+import {ScrollPanel, SelectItem} from 'primeng/primeng';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +13,13 @@ import {ActivatedRoute} from '@angular/router';
 export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   hideNavBar: boolean = false;
-  projects: any = [];
+  projects: SelectItem[] = [];
   user: User;
   @ViewChild(SideNavBarComponent, {static: false})
   sideNavBar: SideNavBarComponent;
   @ViewChild('projectId', {static: true})
   projectId: any;
-  selectedProject: any = {};
+  selectedProject: SelectItem = {label: '', value: ''};
 
   public menuInactiveDesktop: boolean;
 
@@ -41,8 +40,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   topMenuButtonClick: boolean;
 
 
-  constructor(private authenticateService: AuthenticationService, private testProjectService: TestProjectService
-    , public renderer: Renderer2) {
+  constructor(private authenticateService: AuthenticationService, private testProjectService: TestProjectService, private renderer: Renderer2) {
     this.authenticateService.user.subscribe(user => {
       if (user && user.id) {
         this.hideNavBar = true;
@@ -55,7 +53,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.authenticateService.projects.subscribe(createProject => {
       if (createProject) {
-        this.projects.push(createProject);
+        const selectItem: SelectItem = {label: createProject.name, value: createProject}
+        this.projects.push(selectItem);
       }
     });
 
@@ -63,8 +62,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   logout() {
     this.authenticateService.logout();
-    this.projectId.placeholder = 'Select Project';
-    this.projectId.value = undefined;
     if (this.sideNavBar) {
       this.sideNavBar.disableMenu();
     }
@@ -76,15 +73,12 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
-    if (this.selectedProject) {
-      this.projectId.placeholder = this.selectedProject.name;
-    } else {
-      this.projectId.placeholder = 'Select Project';
-    }
+
 
     setTimeout(() => {
-      this.scrollerViewChild.moveBar();
+      if (this.scrollerViewChild) {
+        this.scrollerViewChild.moveBar();
+      }
     }, 100);
 
     // hides the overlay menu and top menu if outside is clicked
@@ -110,7 +104,19 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   findAllProjects() {
     if (this.authenticateService.currentUserValue && this.authenticateService.currentUserValue.id) {
-      this.testProjectService.findAll(this.authenticateService.currentUserValue.id).subscribe(res => this.projects = res);
+      this.testProjectService.findAll(this.authenticateService.currentUserValue.id).subscribe(res => {
+        if (res) {
+          this.projects = [];
+          const prject = JSON.parse(localStorage.getItem('selectedProject'));
+          res.forEach(prj => {
+            const selectItem = {label: prj.name, value: prj};
+            this.projects.push(selectItem);
+            if (prj.id === prject.id) {
+              this.selectedProject = selectItem;
+            }
+          });
+        }
+      });
     }
   }
 
@@ -165,7 +171,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.menuClick = true;
 
     setTimeout(() => {
-      this.scrollerViewChild.moveBar();
+      if (this.scrollerViewChild) {
+        this.scrollerViewChild.moveBar();
+      }
     }, 500);
   }
 

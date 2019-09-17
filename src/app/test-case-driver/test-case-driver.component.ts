@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TestModel} from '../models/test-model';
 import {ElementAction} from '../models/element-action';
 import {DriverService} from '../services/driver.service';
+import {SelectItem} from 'primeng/api';
 
 @Component({
   selector: 'app-manipulate-driver',
@@ -17,36 +18,49 @@ export class TestCaseDriverComponent implements OnInit {
   selectionValue: string;
   selectionType: string;
   sessionId: string;
-  displayedColumns: string[] = ['id', 'name', 'createdDate', 'actions'];
-  testDataSource = new MatTableDataSource<TestModel>([]);
+  testDataSource = [];
   createTestPage: boolean = false;
   selectedTestCaseId: string;
   result: ElementAction;
-  driverList: any = [];
+  driverList: SelectItem[] = [];
   driver: any;
-
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   testCaseName: string;
-
+  commandTypes: SelectItem[] = [{label: 'Navigate', value: 'goToUrl'}, {label: 'Maximize', value: 'maximize'},
+    {label: 'Send Keys', value: 'sendKey'}, {label: 'Click Element', value: 'click'}];
+  commandSelectionType: SelectItem[] = [{label: 'id', value: 'id'},
+    {label: 'xpath', value: 'xpath'},
+    {label: 'css selector', value: 'css selector'},
+    {label: 'className', value: 'className'},
+    {label: 'name', value: 'name'},
+    {label: 'link text', value: 'link text'},
+    {label: 'partial link text', value: 'partial link text'},
+    {label: 'tag name', value: 'tag name'}];
 
   constructor(private manipulateservice: TestCaseService, private router: Router, private driverSerive: DriverService,
               private authenticationService: AuthenticationService, private route: ActivatedRoute) {
-    this.testDataSource.paginator = this.paginator;
     this.route.data.subscribe(item => {
       this.createTestPage = item.typeResolver === 'create' ? true : false;
       // this part is bad practice sorry if you have any question please ask me ? grkn
       if (this.createTestPage) {
         // create page
         this.openCreateTestPage();
-        this.driverSerive.findAll(this.authenticationService.currentUserValue.id).subscribe(res => this.driverList = res);
+        this.driverSerive.findAll(this.authenticationService.currentUserValue.id).subscribe(res => {
+          res.forEach(driver => {
+            this.driverList.push({label: driver.name + '(' + driver.address + ')', value: driver});
+          });
+        });
       } else {
         if (!item.typeResolver) {
           // list page
-          this.testDataSource = new MatTableDataSource(item.testCaseResolver.content);
+          this.testDataSource = item.testCaseResolver.content;
         } else {
           // edit page
           this.manipulateservice.findTestById(item.typeResolver).subscribe(res => {
-            this.driverSerive.findAll(this.authenticationService.currentUserValue.id).subscribe(driverList => this.driverList = driverList);
+            this.driverSerive.findAll(this.authenticationService.currentUserValue.id).subscribe(driverList => {
+              driverList.forEach(driver => {
+                this.driverList.push({label: driver.name + '(' + driver.address + ')', value: driver});
+              });
+            });
             this.openEditTestPage(res);
           });
         }
@@ -55,10 +69,6 @@ export class TestCaseDriverComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
-
-  applyFilter(filterValue: string) {
-    this.testDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   addElementAction() {
@@ -112,7 +122,7 @@ export class TestCaseDriverComponent implements OnInit {
       .subscribe(res => {
         if (res) {
           this.manipulateservice.findAllTest(this.authenticationService.currentUserValue.id, 0, 1000).subscribe(testModalPageable => {
-            this.testDataSource = new MatTableDataSource(testModalPageable.content);
+            this.testDataSource = testModalPageable.content;
             this.router.navigate(['testcases']);
           });
         }
@@ -141,9 +151,6 @@ export class TestCaseDriverComponent implements OnInit {
     overlay.toggle(event);
   }
 
-  compareObjects(o1: any, o2: any): boolean {
-    return o1 && o2 && o1.address === o2.address && o1.port === o2.port;
-  }
 }
 
 

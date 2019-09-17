@@ -1,109 +1,69 @@
-<mat-card *ngIf="!createTestPage">
-  <mat-card-header fxLayout="column">
-    <mat-card-title fxFlexAlign="center" style="text-align: center">Test Cases</mat-card-title>
-  </mat-card-header>
+<p-fieldset legend="Test Cases" *ngIf="!createTestPage">
+  <button pButton color="primary" routerLink="/testcases/create" label="Create Test Case"></button>
+  <div class="mat-elevation-z8" fxFlexOffset="1.5em">
+    <p-table dataKey="id" [value]="testDataSource" [paginator]="true" [rows]="10">
 
-  <mat-card-content fxLayout="column">
-    <button mat-flat-button color="primary" routerLink="/testcases/create">Create Test Case</button>
-    <div class="mat-elevation-z8" fxFlexOffset="1.5em">
-      <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-      </mat-form-field>
-      <table mat-table [dataSource]="testDataSource">
-
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> Id</th>
-          <td mat-cell *matCellDef="let element"> {{element.id}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Name</th>
-          <td mat-cell *matCellDef="let element"> {{element.name}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="createdDate">
-          <th mat-header-cell *matHeaderCellDef> Created Date</th>
-          <td mat-cell *matCellDef="let element"> {{element.createdDate | date}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-flat-button color="primary" routerLink="/testcases/{{element.id}}">Edit</button>
+      <ng-template pTemplate="header" let-columns="columns">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+        <tr>
+          <td>{{rowData.id}}</td>
+          <td>{{rowData.name}}</td>
+          <td>{{rowData.createdDate | date:'medium'}}</td>
+          <td>
+            <button pButton type="button" routerLink="/testcases/{{rowData.id}}" label="Edit"></button>&nbsp;
           </td>
-        </ng-container>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-fieldset>
+<p-fieldset legend="Create Test Case" *ngIf="createTestPage">
+  <input type="text" [(ngModel)]="testCaseName" autocomplete="off"
+         class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Test Case Name"/>
+  <br>
+  <br>
+  <p-dropdown [options]="driverList" [(ngModel)]="driver" placeholder="Driver Name">
+  </p-dropdown>
+</p-fieldset>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </div>
-  </mat-card-content>
-  <mat-card-content></mat-card-content>
-</mat-card>
-<mat-card *ngIf="createTestPage">
-  <mat-card-content>
-    <mat-form-field>
-      <input matInput [(ngModel)]="testCaseName" placeholder="Test Case Name"/>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-select [(ngModel)]="driver" [compareWith]="compareObjects" placeholder="Driver Name">
-        <mat-option *ngFor="let driver of driverList" [value]="driver">{{driver.name}}({{driver.address}})</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </mat-card-content>
-</mat-card>
+<p-fieldset legend="Test Commands" *ngIf="createTestPage">
+  <button pButton color="primary" (click)="addElementAction()" label="Add Command"></button>
+  <div *ngFor="let command of testCommands">
+        <span fxFlexOffset="5px">
+          <p-dropdown [options]="commandTypes" [(ngModel)]="command.type" placeholder="Actions">
+          </p-dropdown>
+        </span>
+    <span fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
+          <p-dropdown [options]="commandSelectionType" [(ngModel)]="command.selectionType" placeholder="Selection Type">
+          </p-dropdown>
+        </span>
+    <span fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
+          <input type="text" [(ngModel)]="command.selectionValue" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Element Selector"/>
+        </span>
+    <span fxFlexOffset="5px" *ngIf="command.type == 'goToUrl'">
+       <input type="text" [(ngModel)]="command.navigateUrl" autocomplete="off"
+              class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Navigation Url"/>
+        </span>
+    <span fxFlexOffset="5px" *ngIf="command.type == 'sendKey'">
+      <input type="text" [(ngModel)]="command.message" autocomplete="off"
+             class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Input"/>
+        </span>
 
-<mat-tab-group mat-align-tabs="elementActions" *ngIf="createTestPage">
-  <mat-tab class="tab_label_color_white" label="New Test Commands">
-    <mat-card fxFlex="column">
-      <button mat-button color="primary" (click)="addElementAction()">Add Command</button>
-      <mat-card-content *ngFor="let command of testCommands">
-        <mat-form-field fxFlexOffset="5px">
-          <mat-select [(ngModel)]="command.type" placeholder="Actions">
-            <mat-option>None</mat-option>
-            <mat-option value="goToUrl">Navigate</mat-option>
-            <mat-option value="maximize">Maximize</mat-option>
-            <mat-option value="sendKey">Send Key</mat-option>
-            <mat-option value="click">Click Element</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
-          <mat-select [(ngModel)]="command.selectionType" placeholder="Selection Type">
-            <mat-option>None</mat-option>
-            <mat-option value="id">id</mat-option>
-            <mat-option value="xpath">xpath</mat-option>
-            <mat-option value="css selector">css selector</mat-option>
-            <mat-option value="className">className</mat-option>
-            <mat-option value="name">name</mat-option>
-            <mat-option value="link text">link text</mat-option>
-            <mat-option value="partial link text">partial link text</mat-option>
-            <mat-option value="tag name">tag name</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
-          <input matInput placeholder="Element Selector" [(ngModel)]="command.selectionValue"/>
-        </mat-form-field>
-        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'goToUrl'">
-          <input matInput placeholder="Navigation Url" [(ngModel)]="command.navigateUrl"/>
-        </mat-form-field>
-        <mat-form-field fxFlexOffset="5px" *ngIf="command.type == 'sendKey'">
-          <input matInput placeholder="Input" [(ngModel)]="command.message"/>
-        </mat-form-field>
+    <button pButton label="Result" (click)="toogleOverlay($event,overlay,command)"></button>
+    <button pButton (click)="removeRow(command)" label="Remove"></button>
+  </div>
 
-        <button mat-button color="primary" (click)="toogleOverlay($event,overlay,command)">
-          <span [class]="!command.result ? '' : command.result.status == 0 ? 'greenColor' :
-        'redColor'">Result</span>
-        </button>
-        <button mat-button (click)="removeRow(command)">Remove</button>
-      </mat-card-content>
-
-      <button mat-flat-button color="primary" (click)="saveTest()">Save</button>
-
-      <button mat-button color="primary" (click)="runTest()">Run Tests</button>
-    </mat-card>
-  </mat-tab>
-</mat-tab-group>
+  <button pButton (click)="saveTest()" label="Save"></button>
+  <button pButton (click)="runTest()" label="Run Tests"></button>
+</p-fieldset>
 <p-overlayPanel #overlay>
   {{!result || !result.result ? '' : result.result.status == 0 ? 'Success' :
   result.result.value | json}}

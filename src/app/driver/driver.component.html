@@ -1,16 +1,22 @@
 <mat-card class="user-create">
   <mat-card-content>
     <p-fieldset legend="Create Driver">
-      <button mat-flat-button color="primary" (click)="openSave()">Create New Driver</button>
-      <mat-form-field>
-        <input matInput placeholder="Driver Address" [(ngModel)]="driver.address"/>
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput type="text" placeholder="Name" [(ngModel)]="driver.name"/>
-      </mat-form-field>
-      <button mat-flat-button color="primary" (click)="saveDriver()" *ngIf="!driver.id">Save</button>
-      <button mat-flat-button color="primary" (click)="saveDriver()" *ngIf="driver.id">Edit</button>
+      <div class="ui-g ui-fluid">
+        <div class="ui-g-2">
+        </div>
+        <div class="ui-g-12">
+          <input type="text" [(ngModel)]="driver.address" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Driver Address"/>
+        </div>
+        <div class="ui-g-12">
+          <input type="text" [(ngModel)]="driver.name" autocomplete="off"
+                 class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Name"/>
+        </div>
+        <div class="ui-g-2">
+          <button pButton (click)="saveDriver()" *ngIf="!driver.id" label="Save"></button>
+          <button pButton (click)="saveDriver()" *ngIf="driver.id" label="Edit"></button>
+        </div>
+      </div>
       <br>
       <br>
       <p-table [columns]="cols" [value]="driverList"
@@ -44,7 +50,7 @@
               {{rowData.name}}
             </td>
             <td>
-              <button mat-flat-button color="primary" (click)="selectDriver(rowData.id)">Edit</button>
+              <button pButton label="Edit" (click)="selectDriver(rowData.id)"></button>
             </td>
           </tr>
         </ng-template>
