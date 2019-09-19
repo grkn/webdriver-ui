@@ -13,8 +13,7 @@ export class TestSuiteRunHistoryDetailResolverService implements Resolve<any> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    return this.testSuiteService.findTestBySuiteIdAndUserId(
-      this.authenticationService.currentUserValue.id, route.paramMap.get('testsuiteId')).pipe(map(item => {
+    return this.testSuiteService.findTestBySuiteId(route.paramMap.get('testsuiteId')).pipe(map(item => {
       item.forEach(element => element.runId = route.paramMap.get('runId'));
       return item;
     }));

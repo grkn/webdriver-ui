@@ -62,10 +62,10 @@ export class TestCaseService {
       }));
   }
 
-  findAllTest(userId: string, page: number, size: number) {
+  findAllTest(page: number, size: number) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/user/${userId}/all?page=${page}&size=${size}`)
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/test/project/${projectId}/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
       }));

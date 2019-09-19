@@ -1,0 +1,160 @@
+<p-fieldset legend="Test Suite Detail">
+  <div class="ui-g-12">
+    <div class="ui-g-6">
+    <p-dropdown [(ngModel)]="driver.value" [options]="driverList"
+                placeholder="Select Driver">
+    </p-dropdown>&nbsp;
+    </div>
+    <div class="ui-g-4">
+    <button pButton color="primary" (click)="runTestSuite(rowData)" label="Run Test Suite"></button>&nbsp;
+    <button pButton (click)="clearAll()" label="Clear All Refreshes"></button>
+    </div>
+  </div>
+  <div class="ui-g-6">
+    <p-table [columns]="cols" [value]="testCases"
+             [paginator]="true" [filters]="true"
+             [rows]="10">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>
+            Name
+          <th>
+            Created Date
+          </th>
+          <th>
+            Created By
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+          <td>
+            {{rowData.name}}
+          </td>
+          <td>
+            {{rowData.createdDate | date}}
+          </td>
+          <td>
+            {{rowData.createdBy}}
+          </td>
+          <td>
+            <button pButton color="primary" (click)="showRunningTestsAuto(rowData.id)" label="Show Details"></button>
+            <button pButton (click)="clearAuto(rowData.id)" label="Clear Details Refresh"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="ui-g-6">
+    <div class="ui-g-12">
+      <button pButton color="primary" (click)="addSelectedTest()" label="Add Selected Tests"></button>
+    </div>
+    <div class="ui-g-12">
+      <p-table [columns]="cols" [value]="testCaseLazyResult" [lazy]="true" [selectionMode]="multiple"
+               [(selection)]="selectedTestCases"
+               (onLazyLoad)="loadAllTestCasesLazy($event)" [paginator]="true"
+               [rows]="10" [totalRecords]="testCaseTotalRecords">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th style="width: 3em"></th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td>{{rowData.id}}</td>
+            <td>{{rowData.name}}</td>
+            <td>{{rowData.createdBy}}</td>
+            <td>{{rowData.createdDate | date:'medium'}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="ui-g-12">
+    <div class="ui-g-12">
+      <p-table dataKey="id" [value]="runningInstances" [lazy]="true"
+               (onLazyLoad)="loadRunningInstanceLazy($event)"
+               [paginator]="true"
+               [rows]="10" [totalRecords]="totalRecords">
+        <ng-template pTemplate="header" let-columns="columns">
+          <tr>
+            <th style="width: 3em"></th>
+            <th>Id</th>
+            <th>Test Case Name</th>
+            <th>Start Date</th>
+            <th>Finished Date</th>
+            <th>User Name</th>
+            <th>Running</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+          <tr>
+            <td>
+              <a [pRowToggler]="rowData">
+                <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+              </a>
+            </td>
+            <td>{{rowData.id}}</td>
+            <td>{{rowData.testCaseName}}</td>
+            <td>{{rowData.startDate | date:'medium'}}</td>
+            <td>{{rowData.fisinedDate | date:'medium'}}</td>
+            <td>{{rowData.userName}}</td>
+            <td>{{rowData.running}}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+          <tr>
+            <td colspan="7">
+              <p-table [columns]="cols" [value]="rowData.steps"
+                                 [paginator]="true" [filters]="true"
+                                 [rows]="10">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th>
+                        Result
+                      <th>
+                        Status
+                      </th>
+                      <th>
+                        Execution Time(ms)
+                      </th>
+                      <th>
+                        Run Status
+                      </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                      <td>
+                        {{rowData.status === 0 ? 'SUCCESS' : 'FAILED'}}
+                      </td>
+                      <td>
+                        {{rowData.status}}
+                      </td>
+                      <td>
+                        {{rowData.executionTime}}
+                      </td>
+                      <td>
+                        {{rowData.runStatus}}
+                      </td>
+                    </tr>
+                </ng-template>
+              </p-table>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-fieldset>

@@ -121,7 +121,7 @@ export class TestCaseDriverComponent implements OnInit {
       this.testCommands, this.testCaseName, this.selectedTestCaseId, this.driver)
       .subscribe(res => {
         if (res) {
-          this.manipulateservice.findAllTest(this.authenticationService.currentUserValue.id, 0, 1000).subscribe(testModalPageable => {
+          this.manipulateservice.findAllTest(0, 2000).subscribe(testModalPageable => {
             this.testDataSource = testModalPageable.content;
             this.router.navigate(['testcases']);
           });

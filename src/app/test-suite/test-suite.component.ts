@@ -49,16 +49,18 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   stepsColumns: string[] = ['result', 'status', 'running', 'time'];
   driverList: SelectItem[] = [];
   driver: SelectItem = {label: '', value: ''};
-
+  suites: any[];
+  totalRecordsSuites: number;
+  suiteEvent: any;
 
   constructor(private route: ActivatedRoute, private testSuiteService: TestSuiteService,
               private toastr: ToastrService, private manipulateService: TestCaseService,
               private authService: AuthenticationService, private driverSerive: DriverService) {
     this.route.data.subscribe(testCases => {
       this.source = testCases.testCaseResolver.content;
-      const tree = testCases.testSuiteResolver;
-      this.fillTreeNode(tree);
-      this.treeNodes.push(tree);
+      const data = testCases.testSuiteResolver;
+      this.suites = data.content;
+      this.totalRecordsSuites = data.totalElements;
     });
     this.driverSerive.findAll(this.authService.currentUserValue.id).subscribe(res => {
       res.forEach(driver => {
@@ -70,41 +72,14 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  private fillTreeNode(tree: any) {
-    if (tree) {
-      tree.data = {id: tree.id, name: tree.name, testCases: tree.testCases};
-      tree.expanded = false;
-      if (tree.children) {
-        tree.children.forEach(treeChild => {
-          this.fillTreeNode(treeChild);
-        });
-      }
-    }
-  }
-
-  private findNode(root: any, parentId: any) {
-    if (root) {
-
-      if (root.id === parentId) {
-        this.foundNode = root;
-      }
-
-      if (root.children) {
-        root.children.forEach(treeChild => {
-          this.findNode(treeChild, parentId);
-        });
-      }
-    }
-  }
-
-  selectedNode(rowNode) {
-    this.selectedTestSuiteId = rowNode.node;
+  selectedNode(event) {
+    this.selectedTestSuiteId = event.data;
     this.selectedTestCaseId = undefined;
     this.source = [];
     this.target = [];
-    this.manipulateService.findAllTest(this.authService.currentUserValue.id, 0, 2000).subscribe(source => {
+    this.manipulateService.findAllTest(0, 2000).subscribe(source => {
 
-      this.testSuiteService.findTestBySuiteIdAndUserId(this.authService.currentUserValue.id, this.selectedTestSuiteId.id)
+      this.testSuiteService.findTestBySuiteId(this.selectedTestSuiteId.id)
         .subscribe(res => {
           if (res && res.length > 0) {
 
@@ -130,7 +105,7 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
       const testCaseId = event.items[0].id;
       this.testSuiteService.addTestCaseTotestSuite(this.selectedTestSuiteId.id, [testCaseId])
         .subscribe(res => {
-          this.selectedTestSuiteId.data.testCases = res.testCases;
+          this.selectedTestSuiteId.testCases = res.testCases;
           this.testCaseDataSource = res.testCases;
         });
     } else {
@@ -138,16 +113,10 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTestSuite(suite: any) {
-    this.testSuiteService.createTestSuite(this.selectedTestSuiteId.data.id, this.newTestSuiteName).subscribe(res => {
-      this.findNode(suite.value[0], this.selectedTestSuiteId.data.id);
-      if (this.foundNode.children) {
-        this.fillTreeNode(res);
-        this.foundNode.children.push(res);
-      } else {
-        this.foundNode.children = [];
-        this.fillTreeNode(res);
-        this.foundNode.children.push(res);
+  addTestSuite() {
+    this.testSuiteService.createTestSuite(this.newTestSuiteName).subscribe(res => {
+      if (res) {
+        this.loadAllSuitesLazy(this.suiteEvent);
       }
     });
   }
@@ -167,21 +136,12 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     }
   }
 
-  runTestSuite(rowNode) {
-    this.selectedTestSuiteId = rowNode.node;
-    if (!this.driver) {
-      this.toastr.error('Please Select A Driver');
-      return;
-    }
-    this.testSuiteService.runTests(this.selectedTestSuiteId.id, this.driver.value.id).subscribe(res => {
-    });
-  }
 
   visibilityOfTestCase(rowNode) {
     if (this.visibilityOfTestCaseList) {
       this.visibilityOfTestCaseList = false;
     } else {
-      this.selectedTestSuiteId = rowNode.node;
+      this.selectedTestSuiteId = rowNode;
       this.visibilityOfTestCaseList = true;
     }
   }
@@ -230,8 +190,17 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
     this.clearAll();
   }
 
-  filterTree(suites, value: any) {
-    suites.filterGlobal(value, 'contains');
+  loadAllSuitesLazy($event: any) {
+    this.testSuiteService.findAll($event.first / $event.rows, $event.rows).subscribe(res => {
+      if (res) {
+        this.totalRecordsSuites = res.totalElements;
+        this.suites = res.content;
+        this.suiteEvent = $event;
+      }
+    });
   }
 
+  selectSuite($event: any) {
+
+  }
 }

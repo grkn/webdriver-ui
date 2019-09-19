@@ -24,6 +24,8 @@ import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver
 import {TestSuiteRunHistoryComponent} from './test-suite-run-history/test-suite-run-history.component';
 import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detail/test-suite-run-history-detail.component';
 import {TestSuiteRunHistoryDetailResolverService} from './resolvers/test-suite-run-history-detail-resolver.service';
+import {TestSuiteDetailResolverService} from './resolvers/test-suite-detail-resolver.service';
+import {TestSuiteDetailComponent} from './test-suite-detail/test-suite-detail.component';
 
 const routes: Routes = [
   {
@@ -43,6 +45,14 @@ const routes: Routes = [
       loginResolver: LoginResolverService,
       testCaseResolver: ManipulateDriverFetchResolverService,
       testSuiteResolver: TestSuiteFetchResolver
+    }
+  },
+  {
+    path: 'testsuites/:id',
+    component: TestSuiteDetailComponent,
+    resolve: {
+      loginResolver: LoginResolverService,
+      testSuiteDetailResolver: TestSuiteDetailResolverService
     }
   },
   {

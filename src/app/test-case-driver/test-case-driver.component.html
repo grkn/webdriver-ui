@@ -1,8 +1,7 @@
 <p-fieldset legend="Test Cases" *ngIf="!createTestPage">
   <button pButton color="primary" routerLink="/testcases/create" label="Create Test Case"></button>
-  <div class="mat-elevation-z8" fxFlexOffset="1.5em">
+  <div class="mat-elevation-z8">
     <p-table dataKey="id" [value]="testDataSource" [paginator]="true" [rows]="10">
-
       <ng-template pTemplate="header" let-columns="columns">
         <tr>
           <th>Id</th>
@@ -34,35 +33,38 @@
 </p-fieldset>
 
 <p-fieldset legend="Test Commands" *ngIf="createTestPage">
-  <button pButton color="primary" (click)="addElementAction()" label="Add Command"></button>
-  <div *ngFor="let command of testCommands">
-        <span fxFlexOffset="5px">
+  <div class="ui-g-4">
+    <button pButton color="primary" (click)="addElementAction()" label="Add Command"></button>
+  </div>
+
+  <div class="ui-g-12" *ngFor="let command of testCommands">
+    <span>
           <p-dropdown [options]="commandTypes" [(ngModel)]="command.type" placeholder="Actions">
           </p-dropdown>
-        </span>
-    <span fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
+    </span>
+    <span *ngIf="command.type == 'sendKey' || command.type == 'click'">
           <p-dropdown [options]="commandSelectionType" [(ngModel)]="command.selectionType" placeholder="Selection Type">
           </p-dropdown>
-        </span>
-    <span fxFlexOffset="5px" *ngIf="command.type == 'sendKey' || command.type == 'click'">
+    </span>
+    <span *ngIf="command.type == 'sendKey' || command.type == 'click'">
           <input type="text" [(ngModel)]="command.selectionValue" autocomplete="off"
                  class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Element Selector"/>
-        </span>
-    <span fxFlexOffset="5px" *ngIf="command.type == 'goToUrl'">
+    </span>
+    <span *ngIf="command.type == 'goToUrl'">
        <input type="text" [(ngModel)]="command.navigateUrl" autocomplete="off"
               class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Navigation Url"/>
-        </span>
-    <span fxFlexOffset="5px" *ngIf="command.type == 'sendKey'">
+    </span>
+    <span *ngIf="command.type == 'sendKey'">
       <input type="text" [(ngModel)]="command.message" autocomplete="off"
              class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Input"/>
-        </span>
-
+    </span>
     <button pButton label="Result" (click)="toogleOverlay($event,overlay,command)"></button>
     <button pButton (click)="removeRow(command)" label="Remove"></button>
   </div>
-
-  <button pButton (click)="saveTest()" label="Save"></button>
-  <button pButton (click)="runTest()" label="Run Tests"></button>
+  <div class="ui-g-6">
+    <button pButton (click)="saveTest()" label="Save"></button>
+    <button pButton (click)="runTest()" label="Run Tests"></button>
+  </div>
 </p-fieldset>
 <p-overlayPanel #overlay>
   {{!result || !result.result ? '' : result.result.status == 0 ? 'Success' :

@@ -12,10 +12,10 @@ export class TestSuiteService {
   constructor(private httpClient: HttpClient, private toastr: ToastrService) {
   }
 
-  findRoot() {
+  findAll(page: any, size: any) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/root`)
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/all?page=${page}&size=${size}`)
       .pipe(map(item => {
         return item;
       }));
@@ -30,11 +30,10 @@ export class TestSuiteService {
       }));
   }
 
-  createTestSuite(parentId: any, name: string) {
+  createTestSuite(name: string) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
     return this.httpClient.post<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}`, {
-      parentId,
       name,
       testCase: []
     }).pipe(map(item => {
@@ -42,10 +41,10 @@ export class TestSuiteService {
     }));
   }
 
-  findTestBySuiteIdAndUserId(userId: string, suiteId: string) {
+  findTestBySuiteId(suiteId: string) {
     const selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
     const projectId = selectedProject ? selectedProject.id : null;
-    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${suiteId}/testcases/user/${userId}`)
+    return this.httpClient.get<any>(`${environment.apiUrl}/tanistan/testsuite/project/${projectId}/${suiteId}/testcases`)
       .pipe(map(item => {
         return item;
       }));

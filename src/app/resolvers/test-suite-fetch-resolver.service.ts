@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {AuthenticationService} from '../services/authenticate';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
@@ -14,7 +14,7 @@ export class TestSuiteFetchResolver implements Resolve<any> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    return this.testsuiteService.findRoot();
+    return this.testsuiteService.findAll(0, 10);
   }
 }
 

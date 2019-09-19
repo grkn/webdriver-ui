@@ -45,8 +45,9 @@ import {RunTestDetailComponent} from './run-test-detail/run-test-detail.componen
 import {RunTestDetailResolverService} from './resolvers/run-test-detail-resolver.service';
 import {TestSuiteRunHistoryComponent} from './test-suite-run-history/test-suite-run-history.component';
 import {TestSuiteRunHistoryDetailComponent} from './test-suite-run-history-detail/test-suite-run-history-detail.component';
-import {ButtonModule, DropdownModule, RadioButtonModule, ScrollPanelModule} from 'primeng/primeng';
+import {ButtonModule, DropdownModule, RadioButtonModule, ScrollPanelModule, TreeModule} from 'primeng/primeng';
 import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
+import { TestSuiteDetailComponent } from './test-suite-detail/test-suite-detail.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
     TestSuiteRunHistoryComponent,
     TestSuiteRunHistoryDetailComponent,
     AppMenuComponent,
-    AppSubMenuComponent
+    AppSubMenuComponent,
+    TestSuiteDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -96,7 +98,8 @@ import {AppMenuComponent, AppSubMenuComponent} from './app.menu.component';
     ScrollPanelModule,
     ButtonModule,
     DropdownModule,
-    RadioButtonModule
+    RadioButtonModule,
+    TreeModule
   ],
   entryComponents: [ReceiveMessageComponent, AddRoleToUserComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
