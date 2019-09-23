@@ -1,4 +1,10 @@
-<p-fieldset legend="Suite">
+<div *ngIf="!selectedProject">
+  <span style="color:red">
+        <p>There is not any defined project or selected project</p>
+        <button routerLink="/testproject/create" mat-flat-button color="primary">Create Project</button>
+    </span>
+</div>
+<p-fieldset *ngIf="selectedProject" legend="Suite">
   <div class="ui-g-12">
     <input type="text" [(ngModel)]="newTestSuiteName" autocomplete="off"
            class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="New Suite Name"/>

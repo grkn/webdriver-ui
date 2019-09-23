@@ -15,36 +15,53 @@ export class TestCaseService {
   constructor(private httpClient: HttpClient, private toastr: ToastrService) {
   }
 
-  killSession(sessionId: string) {
+  killSession(sessionId: string, driverUrl: any) {
     return this.httpClient.delete<any>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}`).pipe(map(item => item));
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}?driverUrl=${driverUrl}`).pipe(map(item => item));
   }
 
-  async getSession() {
+  async getSession(driverUrl: any) {
     return await this.httpClient.post<SessionIdResource>(
-      `${environment.apiUrl}/tanistan/driver/session`, {desiredCapabilities: {}}).toPromise().then(item => item);
+      `${environment.apiUrl}/tanistan/driver/session?driverUrl=${driverUrl}`,
+      {desiredCapabilities: {browserName: 'chrome'}}).toPromise().then(item => item);
   }
 
-  async navigateToUrl(url: string, sessionId: string) {
+  async navigateToUrl(url: string, sessionId: string, driverUrl: any) {
     return await this.httpClient.post<DefaultResource>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/url`, {url}).toPromise().then(item => item);
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/url?driverUrl=${driverUrl}`, {url}).toPromise()
+      .then(item => item);
   }
 
-  async findElementBy(type: string, value: string, sessionId: string) {
+  async maximize(sessionId: string, driverUrl: any) {
     return await this.httpClient.post<DefaultResource>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element`, {using: type, value}).toPromise().then(item => item);
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/window/current/maximize?driverUrl=${driverUrl}`, {}).toPromise()
+      .then(item => item);
   }
 
-  async sendKeysElement(sessionId: string, elementId: string, message: string) {
+  async findElementBy(type: string, value: string, sessionId: string, driverUrl: any) {
     return await this.httpClient.post<DefaultResource>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${elementId}/value`,
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element?driverUrl=${driverUrl}`, {
+        using: type,
+        value
+      }).toPromise().then(item => item);
+  }
+
+  async sendKeysElement(sessionId: string, elementId: string, message: string, driverUrl: any) {
+    return await this.httpClient.post<DefaultResource>(
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${elementId}/value?driverUrl=${driverUrl}`,
       {value: [message]}).toPromise().then(item => item);
   }
 
-  async clickElement(sessionId: string, elementId: string) {
+  async clickElement(sessionId: string, elementId: string, driverUrl: any) {
     return await  this.httpClient.post<DefaultResource>(
-      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${elementId}/click`,
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${elementId}/click?driverUrl=${driverUrl}`,
       {}).toPromise().then(item => item);
+  }
+
+  async getElementText(sessionId: string, selectedElementId: string | string, address: any) {
+    return await this.httpClient.get<DefaultResource>(
+      `${environment.apiUrl}/tanistan/driver/session/${sessionId}/element/${selectedElementId}/text?driverUrl=${address}`
+    ).toPromise().then(item => item);
   }
 
   saveTest(userId: string, testCommands: ElementAction[], name: string, id: string, driver: any) {
@@ -119,4 +136,7 @@ export class TestCaseService {
         return item;
       }));
   }
+
+
+
 }

@@ -46,16 +46,18 @@ export class TestSuiteComponent implements OnInit, OnDestroy {
   runningInstances: any;
   savedEvent: any;
   stepDetailsDatasource: MatTableDataSource<any> = new MatTableDataSource([]);
-  stepsColumns: string[] = ['result', 'status', 'running', 'time'];
   driverList: SelectItem[] = [];
   driver: SelectItem = {label: '', value: ''};
   suites: any[];
   totalRecordsSuites: number;
   suiteEvent: any;
+  selectedProject: any;
 
   constructor(private route: ActivatedRoute, private testSuiteService: TestSuiteService,
               private toastr: ToastrService, private manipulateService: TestCaseService,
               private authService: AuthenticationService, private driverSerive: DriverService) {
+    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+
     this.route.data.subscribe(testCases => {
       this.source = testCases.testCaseResolver.content;
       const data = testCases.testSuiteResolver;

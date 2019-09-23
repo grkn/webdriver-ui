@@ -40,25 +40,25 @@ export class RunTestDetailComponent implements OnInit {
   }
 
   async runTest() {
-    this.sessionId = (await this.testCaseService.getSession()).sessionId;
+    this.sessionId = (await this.testCaseService.getSession(null)).sessionId;
     this.steps = [];
     for (let i = 0; i < this.testCommands.length; i++) {
       const command: any = this.testCommands[i];
 
       if (command.type === 'click') {
         command.selectedElementId = (await
-          this.testCaseService.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
-        command.result = (await this.testCaseService.clickElement(this.sessionId, command.selectedElementId));
+          this.testCaseService.findElementBy(command.selectionType, command.selectionValue, this.sessionId, null)).value.ELEMENT;
+        command.result = (await this.testCaseService.clickElement(this.sessionId, command.selectedElementId, null));
         this.steps.push(command.result);
 
       } else if (command.type === 'sendKey') {
         command.selectedElementId = (await
-          this.testCaseService.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
-        command.result = (await this.testCaseService.sendKeysElement(this.sessionId, command.selectedElementId, command.message));
+          this.testCaseService.findElementBy(command.selectionType, command.selectionValue, this.sessionId, null)).value.ELEMENT;
+        command.result = (await this.testCaseService.sendKeysElement(this.sessionId, command.selectedElementId, command.message, null));
         this.steps.push(command.result);
 
       } else if (command.type === 'goToUrl') {
-        command.result = (await this.testCaseService.navigateToUrl(command.navigateUrl, this.sessionId));
+        command.result = (await this.testCaseService.navigateToUrl(command.navigateUrl, this.sessionId, null));
         this.steps.push(command.result);
       }
 
@@ -67,6 +67,6 @@ export class RunTestDetailComponent implements OnInit {
       }
 
     }
-    this.testCaseService.killSession(this.sessionId).subscribe();
+    this.testCaseService.killSession(this.sessionId, null).subscribe();
   }
 }

@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TestCaseService} from '../services/test-case.service';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {AuthenticationService} from '../services/authenticate';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TestModel} from '../models/test-model';
@@ -26,7 +25,8 @@ export class TestCaseDriverComponent implements OnInit {
   driver: any;
   testCaseName: string;
   commandTypes: SelectItem[] = [{label: 'Navigate', value: 'goToUrl'}, {label: 'Maximize', value: 'maximize'},
-    {label: 'Send Keys', value: 'sendKey'}, {label: 'Click Element', value: 'click'}];
+    {label: 'Send Keys', value: 'sendKey'}, {label: 'Click Element', value: 'click'}, {label: 'Get Element Text', value: 'getElementText'},
+    {label: 'Assert Equal', value: 'assertEqual'}, {label: 'Assert Not Equal', value: 'assertNotEqual'}];
   commandSelectionType: SelectItem[] = [{label: 'id', value: 'id'},
     {label: 'xpath', value: 'xpath'},
     {label: 'css selector', value: 'css selector'},
@@ -35,9 +35,14 @@ export class TestCaseDriverComponent implements OnInit {
     {label: 'link text', value: 'link text'},
     {label: 'partial link text', value: 'partial link text'},
     {label: 'tag name', value: 'tag name'}];
+  selectedProject: any;
+
 
   constructor(private manipulateservice: TestCaseService, private router: Router, private driverSerive: DriverService,
               private authenticationService: AuthenticationService, private route: ActivatedRoute) {
+
+    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+
     this.route.data.subscribe(item => {
       this.createTestPage = item.typeResolver === 'create' ? true : false;
       // this part is bad practice sorry if you have any question please ask me ? grkn
@@ -80,7 +85,10 @@ export class TestCaseDriverComponent implements OnInit {
       message: '',
       result: null,
       type: '',
-      navigateUrl: ''
+      navigateUrl: '',
+      elementText: '',
+      actualValue: '',
+      expectedValue: ''
     });
   }
 
@@ -89,23 +97,54 @@ export class TestCaseDriverComponent implements OnInit {
   }
 
   async runTest() {
-    this.sessionId = (await this.manipulateservice.getSession()).sessionId;
+
+    this.sessionId = (await this.manipulateservice.getSession(this.driver.address)).sessionId;
     for (let i = 0; i < this.testCommands.length; i++) {
       const command: any = this.testCommands[i];
 
 
       if (command.type === 'click') {
-        command.selectedElementId = (await
-          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
-        command.result = (await this.manipulateservice.clickElement(this.sessionId, command.selectedElementId));
+        const val = (await
+          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId, this.driver.address))
+          .value.ELEMENT;
+        command.selectedElementId = this.findElementId(JSON.stringify(val));
+        command.result = (await this.manipulateservice.clickElement(this.sessionId, command.selectedElementId, this.driver.address));
 
       } else if (command.type === 'sendKey') {
-        command.selectedElementId = (await
-          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId)).value.ELEMENT;
-        command.result = (await this.manipulateservice.sendKeysElement(this.sessionId, command.selectedElementId, command.message));
+        const val = (await
+          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId, this.driver.address))
+          .value;
+
+        command.selectedElementId = this.findElementId(JSON.stringify(val));
+        command.result = (await this.manipulateservice.sendKeysElement(this.sessionId, command.selectedElementId, command.message,
+          this.driver.address));
 
       } else if (command.type === 'goToUrl') {
-        command.result = (await this.manipulateservice.navigateToUrl(command.navigateUrl, this.sessionId));
+        command.result = (await this.manipulateservice.navigateToUrl(command.navigateUrl, this.sessionId, this.driver.address));
+      } else if (command.type === 'maximize') {
+        command.result = (await this.manipulateservice.maximize(this.sessionId, this.driver.address));
+      } else if (command.type === 'getElementText') {
+        const val = (await
+          this.manipulateservice.findElementBy(command.selectionType, command.selectionValue, this.sessionId, this.driver.address))
+          .value;
+
+        command.selectedElementId = this.findElementId(JSON.stringify(val));
+        command.result = (await this.manipulateservice.getElementText(this.sessionId, command.selectedElementId, this.driver.address));
+        command.elementText = command.result.value;
+      } else if (command.type === 'assertEqual') {
+        command.result = {status: 0, value: {}};
+        this.testCommands.forEach(cmd => {
+          if (cmd.elementTextUserValue === command.actualValue) {
+            command.expectedValue !== cmd.elementText ? command.result.status = -1 : command.result.status = 0;
+          }
+        });
+      } else if (command.type === 'assertNotEqual') {
+        command.result = {status: 0, value: {}};
+        this.testCommands.forEach(cmd => {
+          if (cmd.elementTextUserValue === command.actualValue) {
+            command.expectedValue === cmd.elementText ? command.result.status = -1 : command.result.status = 0;
+          }
+        });
       }
 
       if (command.result.status !== 0) {
@@ -113,7 +152,13 @@ export class TestCaseDriverComponent implements OnInit {
       }
 
     }
-    this.manipulateservice.killSession(this.sessionId).subscribe();
+    // this.manipulateservice.killSession(this.sessionId, this.driver.address).subscribe();
+  }
+
+  findElementId(jsonString: string) {
+    const myRegexp = /(:")(.*)("})/g;
+    const match = myRegexp.exec(jsonString);
+    return match[2];
   }
 
   saveTest() {

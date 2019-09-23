@@ -1,4 +1,10 @@
-<p-fieldset legend="Test Suite Detail">
+<div *ngIf="!selectedProject">
+  <span style="color:red">
+        <p>There is not any defined project or selected project</p>
+        <button routerLink="/testproject/create" mat-flat-button color="primary">Create Project</button>
+  </span>
+</div>
+<p-fieldset *ngIf="selectedProject" legend="Test Suite Detail">
   <div class="ui-g-12">
     <div class="ui-g-6">
     <p-dropdown [(ngModel)]="driver.value" [options]="driverList"

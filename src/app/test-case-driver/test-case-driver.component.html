@@ -1,72 +1,94 @@
-<p-fieldset legend="Test Cases" *ngIf="!createTestPage">
-  <button pButton color="primary" routerLink="/testcases/create" label="Create Test Case"></button>
-  <div class="mat-elevation-z8">
-    <p-table dataKey="id" [value]="testDataSource" [paginator]="true" [rows]="10">
-      <ng-template pTemplate="header" let-columns="columns">
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Created Date</th>
-          <th>Actions</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
-        <tr>
-          <td>{{rowData.id}}</td>
-          <td>{{rowData.name}}</td>
-          <td>{{rowData.createdDate | date:'medium'}}</td>
-          <td>
-            <button pButton type="button" routerLink="/testcases/{{rowData.id}}" label="Edit"></button>&nbsp;
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-</p-fieldset>
-<p-fieldset legend="Create Test Case" *ngIf="createTestPage">
-  <input type="text" [(ngModel)]="testCaseName" autocomplete="off"
-         class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Test Case Name"/>
-  <br>
-  <br>
-  <p-dropdown [options]="driverList" [(ngModel)]="driver" placeholder="Driver Name">
-  </p-dropdown>
-</p-fieldset>
+<div *ngIf="!selectedProject">
+    <span style="color:red">
+        <p>There is not any defined project or selected project</p>
+        <button routerLink="/testproject/create" mat-flat-button color="primary">Create Project</button>
+    </span>
+</div>
+<div *ngIf="selectedProject">
+  <p-fieldset legend="Test Cases" *ngIf="!createTestPage">
+    <button pButton color="primary" routerLink="/testcases/create" label="Create Test Case"></button>
+    <div class="mat-elevation-z8">
+      <p-table dataKey="id" [value]="testDataSource" [paginator]="true" [rows]="10">
+        <ng-template pTemplate="header" let-columns="columns">
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+          <tr>
+            <td>{{rowData.id}}</td>
+            <td>{{rowData.name}}</td>
+            <td>{{rowData.createdDate | date:'medium'}}</td>
+            <td>
+              <button pButton type="button" routerLink="/testcases/{{rowData.id}}" label="Edit"></button>&nbsp;
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </p-fieldset>
+  <p-fieldset legend="Create Test Case" *ngIf="createTestPage">
+    <input type="text" [(ngModel)]="testCaseName" autocomplete="off"
+           class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Test Case Name"/>
+    <br>
+    <br>
+    <p-dropdown [options]="driverList" [(ngModel)]="driver" placeholder="Driver Name">
+    </p-dropdown>
+  </p-fieldset>
 
-<p-fieldset legend="Test Commands" *ngIf="createTestPage">
-  <div class="ui-g-4">
-    <button pButton color="primary" (click)="addElementAction()" label="Add Command"></button>
-  </div>
+  <p-fieldset legend="Test Commands" *ngIf="createTestPage">
+    <div class="ui-g-4">
+      <button pButton color="primary" (click)="addElementAction()" label="Add Command"></button>
+    </div>
 
-  <div class="ui-g-12" *ngFor="let command of testCommands">
+    <div class="ui-g-12" *ngFor="let command of testCommands">
     <span>
           <p-dropdown [options]="commandTypes" [(ngModel)]="command.type" placeholder="Actions">
           </p-dropdown>
     </span>
-    <span *ngIf="command.type == 'sendKey' || command.type == 'click'">
+      <span *ngIf="command.type == 'sendKey' || command.type == 'click' || command.type == 'getElementText'">
           <p-dropdown [options]="commandSelectionType" [(ngModel)]="command.selectionType" placeholder="Selection Type">
           </p-dropdown>
     </span>
-    <span *ngIf="command.type == 'sendKey' || command.type == 'click'">
+      <span *ngIf="command.type == 'sendKey' || command.type == 'click' || command.type == 'getElementText'">
           <input type="text" [(ngModel)]="command.selectionValue" autocomplete="off"
                  class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Element Selector"/>
     </span>
-    <span *ngIf="command.type == 'goToUrl'">
+      <span *ngIf="command.type == 'goToUrl'">
        <input type="text" [(ngModel)]="command.navigateUrl" autocomplete="off"
               class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Navigation Url"/>
     </span>
-    <span *ngIf="command.type == 'sendKey'">
+      <span *ngIf="command.type == 'sendKey'">
       <input type="text" [(ngModel)]="command.message" autocomplete="off"
              class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Input"/>
     </span>
-    <button pButton label="Result" (click)="toogleOverlay($event,overlay,command)"></button>
-    <button pButton (click)="removeRow(command)" label="Remove"></button>
-  </div>
-  <div class="ui-g-6">
-    <button pButton (click)="saveTest()" label="Save"></button>
-    <button pButton (click)="runTest()" label="Run Tests"></button>
-  </div>
-</p-fieldset>
-<p-overlayPanel #overlay>
-  {{!result || !result.result ? '' : result.result.status == 0 ? 'Success' :
-  result.result.value | json}}
-</p-overlayPanel>
+      <span *ngIf="command.type == 'getElementText'">
+      <input type="text" [(ngModel)]="command.elementTextUserValue" autocomplete="off"
+             class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Input"/>
+    </span>
+      <span *ngIf="command.type == 'assertEqual'">
+      <input type="text" [(ngModel)]="command.expectedValue" autocomplete="off"
+             class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Expected Value"/>
+
+         <input type="text" [(ngModel)]="command.actualValue" autocomplete="off"
+                class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Actual Value"/>
+    </span>
+    <span *ngIf="command.type == 'assertNotEqual'">
+      <input type="text" [(ngModel)]="command.expectedValue" autocomplete="off"
+             class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Expected Value"/>
+
+         <input type="text" [(ngModel)]="command.actualValue" autocomplete="off"
+                class="ui-inputtext ui-corner-all ui-state-default ui-widget" placeholder="Actual Value"/>
+    </span>
+      <span *ngIf="result && result.result">{{result.result.status == 0 ? 'Success' : 'Failed'}}</span>
+      <button pButton (click)="removeRow(command)" label="Remove"></button>
+    </div>
+    <div class="ui-g-6">
+      <button pButton (click)="saveTest()" label="Save"></button>
+      <button pButton (click)="runTest()" label="Run Tests"></button>
+    </div>
+  </p-fieldset>
+</div>

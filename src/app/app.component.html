@@ -9,27 +9,12 @@
     </a>
     <div id="topbar-icons" class="animated"
          [ngClass]="{'topbar-icons-visible flipInX':topMenuActive,'flipOutX':topMenuLeaving}">
-      <span>
-        Selected Project : {{selectedProject.label}}
-      </span>
-
-      <span class="topbar-search" (click)="onSearchClick()">
-          <input type="text" placeholder="Search"/>
-          <span class="topbar-search-icon fa fa-search"></span>
-      </span>
-      <a href="#">
-        <span class="topbar-item-text">Messages</span>
-        <span class="topbar-icon fa fa-envelope-o animated swing"></span>
-        <span class="topbar-badge animated rubberBand">5</span>
-      </a>
-      <a href="#">
-        <span class="topbar-item-text">Settings</span>
-        <span class="topbar-icon fa fa-gear"></span>
-      </a>
       <a href="#">
         <span class="topbar-item-text">User</span>
-        <span class="topbar-icon fa fa-user">{{user && user.name ? 'Welcome ' + user.name : 'Welcome Guest'}}</span>
+        <span
+          class="topbar-icon fa fa-user">{{user && user.name ? user.emailAddress : 'Welcome Guest'}}</span>
       </a>
+      <a (click)="logout()">Logout</a>
     </div>
   </div>
   <div *ngIf="hideNavBar" class="sidebar" (click)="onMenuClick()">
@@ -44,16 +29,6 @@
                       placeholder="Projects">
           </p-dropdown>
           <br/>
-          <a id="profile-button" href="#" (click)="toggleProfile($event)">
-            <span class="username">{{user && user.name ?  user.name + ' ' + user.lastName : 'Welcome Guest'}}</span>
-            <i class="fa fa-fw fa-cog"></i>
-          </a>
-          <ul [@submenu]="profileActive ? 'visible' : 'hidden'">
-            <li><a href="#"><i class="fa fa-fw fa-sliders"></i><span>Account</span></a></li>
-            <li><a href="#"><i class="fa fa-fw fa-bell"></i><span>Notifications</span><span class="menu-badge">2</span></a>
-            </li>
-            <li><a (click)="logout()"><i class="fa fa-fw fa-sign-out"></i><span>Logout</span></a></li>
-          </ul>
         </div>
         <app-menu></app-menu>
       </div>

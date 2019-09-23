@@ -15,8 +15,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   hideNavBar: boolean = false;
   projects: SelectItem[] = [];
   user: User;
-  @ViewChild(SideNavBarComponent, {static: false})
-  sideNavBar: SideNavBarComponent;
+
   @ViewChild('projectId', {static: true})
   projectId: any;
   selectedProject: SelectItem = {label: '', value: ''};
@@ -55,16 +54,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if (createProject) {
         const selectItem: SelectItem = {label: createProject.name, value: createProject}
         this.projects.push(selectItem);
+        this.selectedProject = {label: createProject.name, value: createProject};
       }
     });
 
-  }
-
-  logout() {
-    this.authenticateService.logout();
-    if (this.sideNavBar) {
-      this.sideNavBar.disableMenu();
-    }
   }
 
   selectProject($event) {
@@ -111,7 +104,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
           res.forEach(prj => {
             const selectItem = {label: prj.name, value: prj};
             this.projects.push(selectItem);
-            if (prj.id === prject.id) {
+            if (prject && prj.id === prject.id) {
               this.selectedProject = selectItem;
             }
           });
@@ -181,13 +174,13 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     return window.innerWidth > 1024;
   }
 
-  onSearchClick() {
-    this.topMenuButtonClick = true;
-  }
-
   ngOnDestroy() {
     if (this.documentClickListener) {
       this.documentClickListener();
     }
+  }
+
+  logout() {
+    this.authenticateService.logout();
   }
 }

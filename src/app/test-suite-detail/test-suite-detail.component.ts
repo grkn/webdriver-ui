@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, Route, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {TestSuiteService} from '../services/test-suite.service';
 import {ToastrService} from 'ngx-toastr';
 import {DriverService} from '../services/driver.service';
 import {AuthenticationService} from '../services/authenticate';
 import {TestCaseService} from '../services/test-case.service';
 import {SelectItem} from 'primeng/api';
-import {MatTableDataSource} from '@angular/material';
 
 @Component({
   selector: 'app-test-suite-detail',
@@ -28,10 +27,14 @@ export class TestSuiteDetailComponent implements OnInit {
   savedEvent: any;
   intervalObject: any[];
   runningInstances: any[];
+  selectedProject: any;
 
   constructor(private activeRouter: ActivatedRoute, private testSuiteService: TestSuiteService, private toastr: ToastrService,
               private driverService: DriverService, private authService: AuthenticationService,
               private testCaseService: TestCaseService) {
+
+    this.selectedProject = JSON.parse(localStorage.getItem('selectedProject'));
+
     this.activeRouter.data.subscribe(res => {
       this.testCases = res.testSuiteDetailResolver;
     });

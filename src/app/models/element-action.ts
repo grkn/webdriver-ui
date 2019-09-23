@@ -9,4 +9,8 @@ export interface ElementAction {
   result: DefaultResource;
   type: string;
   navigateUrl: string;
+  elementText: string;
+  elementTextUserValue: string;
+  expectedValue: string;
+  actualValue: string;
 }
